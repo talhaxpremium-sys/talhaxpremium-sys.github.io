@@ -1,9 +1,10 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Noon Mate</title>
+<title>Noon Mate — Everyday Utility Toolkit</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <style>
 :root{--bg:#fffbe0;--ink:#161616;--card:rgba(255,255,255,.78);--line:rgba(0,0,0,.1);--y:#feee00;--p:#ff3d81;--b:#2d6bff;--g:#10c98f;--muted:#5b5b52;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
@@ -20,13 +21,14 @@ body{margin:0;background:var(--bg);color:var(--ink);font-family:"Trebuchet MS","
 .wrap{position:relative;z-index:1;max-width:980px;margin:0 auto;padding:18px 16px 40px}
 header{display:flex;align-items:center;justify-content:space-between;gap:12px}
 .brand{display:flex;align-items:center;gap:10px;font-weight:900;font-size:22px}
+.badge-unofficial{font-size:11px;font-weight:800;padding:3px 9px;border-radius:999px;background:var(--card);border:1px solid var(--line);color:var(--muted)}
 .logo{animation:bob 3s ease-in-out infinite}
 @keyframes bob{50%{transform:translateY(-4px) rotate(-3deg)}}
 #theme{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:8px 14px;cursor:pointer;font-size:15px}
 .hero{text-align:center;padding:34px 8px 20px}
 .hero h1{font-size:clamp(34px,8vw,64px);margin:0;line-height:1.05;letter-spacing:-1px;background:linear-gradient(90deg,var(--p),#ff9f1c,var(--b),var(--g),var(--p));background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:flow 6s linear infinite}
 @keyframes flow{to{background-position:300% 0}}
-.hero p{color:var(--muted);margin:10px auto 0;max-width:460px}
+.hero p{color:var(--muted);margin:10px auto 0;max-width:520px}
 nav{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:18px 0}
 nav button{border:2px solid var(--ink);background:var(--card);color:var(--ink);font:inherit;font-weight:800;padding:11px 18px;border-radius:16px;cursor:pointer;transition:transform .2s,background .2s,box-shadow .2s;box-shadow:3px 3px 0 var(--ink)}
 nav button:hover{transform:translate(-2px,-2px)}
@@ -35,9 +37,9 @@ nav button.on{background:var(--y);color:#161616;transform:translate(2px,2px);box
 .panel.on{display:block;animation:pop .45s cubic-bezier(.2,1.3,.4,1)}
 @keyframes pop{from{transform:scale(.94);opacity:0}}
 h2{margin:0 0 14px;font-size:24px}
-input,select{font:inherit;color:var(--ink);background:var(--card);border:2px solid var(--line);border-radius:14px;padding:12px 14px;width:100%;outline:none}
-input:focus-visible,button:focus-visible{outline:3px solid var(--b);outline-offset:2px}
-input:focus{border-color:var(--b)}
+input,select,textarea{font:inherit;color:var(--ink);background:var(--card);border:2px solid var(--line);border-radius:14px;padding:12px 14px;width:100%;outline:none}
+input:focus-visible,button:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid var(--b);outline-offset:2px}
+input:focus,select:focus,textarea:focus{border-color:var(--b)}
 .btn{border:0;font:inherit;font-weight:800;color:#161616;background:linear-gradient(135deg,var(--y),#ffb703);padding:12px 20px;border-radius:14px;cursor:pointer;transition:transform .15s}
 .btn:active{transform:scale(.95)}
 .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
@@ -63,25 +65,28 @@ input[type=color]{padding:2px;height:44px;width:60px}
 .hbox li{display:flex;justify-content:space-between;gap:10px;padding:9px 12px;margin-bottom:6px;border-radius:12px;background:var(--card);border:1px solid var(--line);cursor:pointer;font-size:14px}
 .hbox li b{color:var(--g)}
 .hbox li:hover{border-color:var(--y)}
-.tools{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
-.tool{position:relative;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:16px 14px 14px;display:flex;flex-direction:column;gap:4px}
+.tools{display:grid;grid-template-columns:repeat(auto-fill,minmax(165px,1fr));gap:12px}
+.tool{position:relative;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:16px 14px 14px;display:flex;flex-direction:column;gap:4px;cursor:pointer;text-align:left;transition:transform .15s,border-color .15s}
+.tool:hover{transform:translateY(-2px);border-color:var(--b)}
+.tool.active-tool{border:2px solid var(--b);box-shadow:0 4px 14px rgba(45,107,255,.15)}
 .tool .ti{font-size:30px;display:inline-block;animation:bob 3s ease-in-out infinite}
 .tool:nth-child(2n) .ti{animation-delay:-1s}.tool:nth-child(3n) .ti{animation-delay:-2s}
 .tool h3{margin:6px 0 0;font-size:16px}
 .tool p{margin:0 0 8px;color:var(--muted);font-size:13px;line-height:1.35}
-.soon{align-self:flex-start;margin-top:auto;background:linear-gradient(135deg,var(--p),#ff9f1c);color:#fff;font-size:12px;font-weight:800;padding:4px 10px;border-radius:999px}
+.soon{align-self:flex-start;margin-top:auto;background:linear-gradient(135deg,var(--g),#2d6bff);color:#fff;font-size:12px;font-weight:800;padding:4px 10px;border-radius:999px}
+.tool-workspace{margin-top:18px;background:var(--card);border:2px solid var(--line);border-radius:20px;padding:18px}
+.result-pill{margin-top:12px;padding:12px 14px;border-radius:14px;background:rgba(16,201,143,.12);border:1px solid var(--g);font-weight:800;word-break:break-all}
 .chips{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
 .chip{border:1px solid var(--line);background:var(--card);color:var(--ink);padding:7px 13px;border-radius:999px;cursor:pointer;font:inherit;font-size:14px}
 .chip:hover{background:var(--y);color:#161616}
-.frame{width:100%;height:62vh;min-height:360px;border:2px solid var(--ink);border-radius:18px;background:#fff;display:none}
-.frame.on{display:block}
-.empty{border:2px dashed var(--line);border-radius:18px;padding:40px 16px;text-align:center;color:var(--muted)}
-footer{text-align:center;color:var(--muted);font-size:13px;margin-top:22px}
+footer{text-align:center;color:var(--muted);font-size:13px;margin-top:26px;padding-top:16px;border-top:1px solid var(--line);line-height:1.5}
+footer a{color:var(--ink);font-weight:700}
+.disclaimer-box{max-width:740px;margin:8px auto 0;font-size:12px;color:var(--muted);background:var(--card);border:1px solid var(--line);border-radius:14px;padding:10px 14px}
 #devbtn{position:fixed;right:14px;bottom:calc(14px + env(safe-area-inset-bottom,0px));z-index:5;width:30px;height:30px;border-radius:50%;border:1.5px solid var(--ink);background:var(--y);color:#161616;font-size:16px;line-height:1;padding:0;cursor:pointer;transition:transform .15s}
 #devbtn:hover{transform:rotate(-8deg) scale(1.08)}
 .ov{position:fixed;inset:0;z-index:20;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.5);padding:20px}
 .ov.on{display:flex}
-.dev{width:100%;max-width:340px;background:var(--bg);color:var(--ink);border:2px solid var(--ink);border-radius:26px;padding:26px 22px;text-align:center;animation:pop .35s cubic-bezier(.2,1.3,.4,1)}
+.dev{width:100%;max-width:360px;background:var(--bg);color:var(--ink);border:2px solid var(--ink);border-radius:26px;padding:26px 22px;text-align:center;animation:pop .35s cubic-bezier(.2,1.3,.4,1)}
 .dev img,.av{width:112px;height:112px;border-radius:50%;object-fit:cover;border:4px solid var(--y);margin:0 auto 12px;display:block}
 .av{display:none;background:var(--y);color:#161616;font-size:46px;font-weight:900;line-height:104px}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
@@ -93,13 +98,16 @@ footer{text-align:center;color:var(--muted);font-size:13px;margin-top:22px}
 <header>
   <div class="brand">
     <svg class="logo" width="54" height="54" viewBox="0 0 54 54" aria-label="Noon Mate logo"><rect width="54" height="54" rx="15" fill="#feee00" stroke="#161616" stroke-width="2.5"/><text x="27" y="30" text-anchor="middle" font-family="Trebuchet MS,Arial,sans-serif" font-weight="900" font-size="17" fill="#161616">noon</text><path d="M15 38q12 9 24 0" stroke="#161616" stroke-width="3" fill="none" stroke-linecap="round"/><circle cx="43" cy="12" r="3.5" fill="#ff3d81"/></svg>
-    <span>noon mate</span>
+    <div>
+      <span>noon mate</span>
+      <div class="badge-unofficial">Unofficial Utility Toolkit</div>
+    </div>
   </div>
   <button id="theme" aria-label="Toggle theme">🌓</button>
 </header>
 <section class="hero">
   <h1>Your everyday toolkit</h1>
-  <p>Make QR codes, do quick math, and search any site — all in one place.</p>
+  <p>Make QR codes, do quick math, and use everyday helper utilities — all in your browser.</p>
 </section>
 <nav id="tabs">
   <button class="on" data-t="qr">QR Code</button>
@@ -112,7 +120,7 @@ footer{text-align:center;color:var(--muted);font-size:13px;margin-top:22px}
   <div class="qrgrid">
     <div>
       <label for="qtext">Text or link</label>
-      <input id="qtext" placeholder="https://...">
+      <input id="qtext" placeholder="https://..." value="https://talhaxpremium-sys.github.io/">
       <div class="row" style="margin-top:12px">
         <div><label for="qfg">QR color</label><br><input type="color" id="qfg" value="#161616"></div>
         <div><label for="qbg">Background</label><br><input type="color" id="qbg" value="#ffffff"></div>
@@ -137,17 +145,35 @@ footer{text-align:center;color:var(--muted);font-size:13px;margin-top:22px}
 
 <section class="panel" id="more">
   <h2>More tools</h2>
-  <p class="hint" style="margin:0 0 14px">New tools are on the way. Here is a preview of what is coming.</p>
-  <div class="tools"><div class="tool"><span class="ti">📏</span><h3>Unit converter</h3><p>Length, weight and temperature in one tap.</p><span class="soon">Coming soon</span></div><div class="tool"><span class="ti">🎂</span><h3>Age calculator</h3><p>Find your exact age in years, months and days.</p><span class="soon">Coming soon</span></div><div class="tool"><span class="ti">🔐</span><h3>Password generator</h3><p>Create strong, random passwords instantly.</p><span class="soon">Coming soon</span></div><div class="tool"><span class="ti">🎨</span><h3>Color picker</h3><p>Pick colors and copy HEX or RGB codes.</p><span class="soon">Coming soon</span></div><div class="tool"><span class="ti">🔤</span><h3>Word counter</h3><p>Count words, characters and reading time.</p><span class="soon">Coming soon</span></div><div class="tool"><span class="ti">💸</span><h3>Tip splitter</h3><p>Split a bill between friends with tip included.</p><span class="soon">Coming soon</span></div><div class="tool"><span class="ti">⏱️</span><h3>Stopwatch &amp; timer</h3><p>Simple stopwatch and countdown timer.</p><span class="soon">Coming soon</span></div><div class="tool"><span class="ti">📝</span><h3>Quick notes</h3><p>Jot down notes that stay on your device.</p><span class="soon">Coming soon</span></div></div>
+  <p class="hint" style="margin:0 0 14px">Tap any utility below to open and use it right inside your browser.</p>
+  <div class="tools" id="toolgrid">
+    <div class="tool active-tool" data-tool="unit"><span class="ti">📏</span><h3>Unit converter</h3><p>Length, weight and temperature in one tap.</p><span class="soon">Open tool</span></div>
+    <div class="tool" data-tool="age"><span class="ti">🎂</span><h3>Age calculator</h3><p>Find your exact age in years, months and days.</p><span class="soon">Open tool</span></div>
+    <div class="tool" data-tool="pass"><span class="ti">🔐</span><h3>Password generator</h3><p>Create strong, random strings locally.</p><span class="soon">Open tool</span></div>
+    <div class="tool" data-tool="color"><span class="ti">🎨</span><h3>Color picker</h3><p>Pick colors and copy HEX or RGB codes.</p><span class="soon">Open tool</span></div>
+    <div class="tool" data-tool="word"><span class="ti">🔤</span><h3>Word counter</h3><p>Count words, characters and reading time.</p><span class="soon">Open tool</span></div>
+    <div class="tool" data-tool="tip"><span class="ti">💸</span><h3>Tip splitter</h3><p>Split a bill between friends with tip included.</p><span class="soon">Open tool</span></div>
+    <div class="tool" data-tool="timer"><span class="ti">⏱️</span><h3>Stopwatch</h3><p>Simple browser stopwatch with lap tracking.</p><span class="soon">Open tool</span></div>
+    <div class="tool" data-tool="notes"><span class="ti">📝</span><h3>Quick notes</h3><p>Jot down notes that stay on your device.</p><span class="soon">Open tool</span></div>
+  </div>
+  <div class="tool-workspace" id="toolview"></div>
 </section>
-<footer>Made by Talha Tech Global Inc.</footer>
+
+<footer>
+  <div>Made by <strong>Talha</strong> (<a href="https://github.com/talhaxpremium-sys" target="_blank" rel="noopener noreferrer">@talhaxpremium-sys</a>) • Open-Source Personal Web Development Project</div>
+  <div class="disclaimer-box">
+    <strong>Disclaimer:</strong> Noon Mate is an independent, non-commercial browser utility toolkit created for everyday productivity. It is <strong>not</strong> an official Noon login portal or corporate system, and it does not request, store, or collect any employee passwords, credentials, or personal data.
+  </div>
+</footer>
+
 <button id="devbtn" type="button" aria-label="Developer details">ⓘ</button>
 <div class="ov" id="ov"><div class="dev" role="dialog" aria-label="Developer details">
   <img id="dimg" src="https://i.ibb.co/1J9kypVg/20260607-202744-3.jpg" alt="Developer photo" referrerpolicy="no-referrer">
   <div class="av" id="dav">T</div>
-  <h3 style="margin:0">Talha Tech Global Inc.</h3>
-  <p class="hint">Developer of Noon Mate</p>
-  <p style="margin:8px 0 16px">Building simple, fast and colorful tools for everyday use.</p>
+  <h3 style="margin:0">Talha (@talhaxpremium-sys)</h3>
+  <p class="hint">Independent Developer of Noon Mate</p>
+  <p style="margin:8px 0 12px">Building simple, fast, non-commercial browser utilities with HTML, CSS &amp; JavaScript.</p>
+  <p style="margin:0 0 16px;font-size:13px"><a href="https://github.com/talhaxpremium-sys/talhaxpremium-sys.github.io" target="_blank" rel="noopener noreferrer" style="color:var(--b);font-weight:800">View Source on GitHub ↗</a></p>
   <button class="btn" id="dclose" type="button">Close</button>
 </div></div>
 </div>
@@ -216,7 +242,7 @@ function press(k){
   show();
 }
 document.addEventListener('keydown',function(e){
-  if(!document.getElementById('calc').classList.contains('on')||e.target.tagName==='INPUT')return;
+  if(!document.getElementById('calc').classList.contains('on')||e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA')return;
   var m={'*':'×','/':'÷','-':'−'};
   if(/^[0-9.+()]$/.test(e.key))press(e.key);
   else if(m[e.key]){e.preventDefault();press(m[e.key])}
@@ -224,6 +250,16 @@ document.addEventListener('keydown',function(e){
   else if(e.key==='Backspace')press('⌫');
   else if(e.key==='Escape')press('C');
 });
-</script>
-</body>
-</html>
+
+// More Tools Interactive Workspace
+var swTimer=null,swStart=0,swElapsed=0;
+function openTool(id){
+  if(swTimer){clearInterval(swTimer);swTimer=null;}
+  var v=document.getElementById('toolview');
+  document.querySelectorAll('#toolgrid .tool').forEach(function(c){c.classList.toggle('active-tool',c.dataset.tool===id)});
+  if(id==='unit'){
+    v.innerHTML='<h3>📏 Unit converter</h3><div class="row"><input type="number" id="uval" value="1" style="max-width:160px"><select id="utype" style="max-width:240px"><option value="km_mi">Kilometers → Miles</option><option value="mi_km">Miles → Kilometers</option><option value="kg_lb">Kilograms → Pounds</option><option value="lb_kg">Pounds → Kilograms</option><option value="c_f">Celsius → Fahrenheit</option><option value="f_c">Fahrenheit → Celsius</option></select></div><div class="result-pill" id="ures">1 km = 0.6214 miles</div>';
+    var calcU=function(){
+      var val=parseFloat(document.getElementById('uval').value)||0,t=document.getElementById('utype').value,res='';
+      if(t==='km_mi')res=val+' km = '+(val*0.621371).toFixed(4)+' miles';
+      
