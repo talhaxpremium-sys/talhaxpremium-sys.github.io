@@ -1,0 +1,1269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Noon Mate — Everyday Utility Toolkit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+:root{
+  --bg:#f8f7f1;
+  --bg-mesh:
+    radial-gradient(at 12% 10%, rgba(254,238,0,.32) 0px, transparent 48%),
+    radial-gradient(at 88% 14%, rgba(45,107,255,.18) 0px, transparent 46%),
+    radial-gradient(at 52% 88%, rgba(255,61,129,.16) 0px, transparent 50%),
+    radial-gradient(at 80% 75%, rgba(16,201,143,.15) 0px, transparent 45%);
+  --ink:#111110;
+  --card:rgba(255,255,255,.78);
+  --card-solid:#ffffff;
+  --card-elev:rgba(255,255,255,.94);
+  --line:rgba(17,17,16,.09);
+  --line-strong:rgba(17,17,16,.16);
+  --y:#feee00;
+  --y-dark:#f5b700;
+  --p:#ff3d81;
+  --b:#2d6bff;
+  --g:#10c98f;
+  --muted:#626157;
+  --shadow:0 24px 60px -12px rgba(17,17,16,.1), 0 4px 18px -2px rgba(17,17,16,.05);
+  --shadow-sm:0 8px 24px -4px rgba(17,17,16,.06), 0 2px 6px -1px rgba(17,17,16,.04);
+  --glow:0 0 35px rgba(254,238,0,.45);
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#09090b;
+    --bg-mesh:
+      radial-gradient(at 12% 10%, rgba(254,238,0,.15) 0px, transparent 50%),
+      radial-gradient(at 88% 14%, rgba(45,107,255,.2) 0px, transparent 48%),
+      radial-gradient(at 52% 88%, rgba(255,61,129,.15) 0px, transparent 52%),
+      radial-gradient(at 80% 75%, rgba(16,201,143,.14) 0px, transparent 45%);
+    --ink:#faf8ee;
+    --card:rgba(24,24,28,.75);
+    --card-solid:#16161a;
+    --card-elev:rgba(32,32,38,.92);
+    --line:rgba(255,255,255,.1);
+    --line-strong:rgba(255,255,255,.2);
+    --muted:#a3a193;
+    --shadow:0 28px 68px -12px rgba(0,0,0,.65), 0 4px 20px -2px rgba(0,0,0,.45);
+    --shadow-sm:0 10px 26px -4px rgba(0,0,0,.45);
+    --glow:0 0 40px rgba(254,238,0,.22);
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#09090b;
+  --bg-mesh:
+    radial-gradient(at 12% 10%, rgba(254,238,0,.15) 0px, transparent 50%),
+    radial-gradient(at 88% 14%, rgba(45,107,255,.2) 0px, transparent 48%),
+    radial-gradient(at 52% 88%, rgba(255,61,129,.15) 0px, transparent 52%),
+    radial-gradient(at 80% 75%, rgba(16,201,143,.14) 0px, transparent 45%);
+  --ink:#faf8ee;
+  --card:rgba(24,24,28,.75);
+  --card-solid:#16161a;
+  --card-elev:rgba(32,32,38,.92);
+  --line:rgba(255,255,255,.1);
+  --line-strong:rgba(255,255,255,.2);
+  --muted:#a3a193;
+  --shadow:0 28px 68px -12px rgba(0,0,0,.65), 0 4px 20px -2px rgba(0,0,0,.45);
+  --shadow-sm:0 10px 26px -4px rgba(0,0,0,.45);
+  --glow:0 0 40px rgba(254,238,0,.22);
+}
+
+html{scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background-color:var(--bg);
+  background-image:var(--bg-mesh);
+  background-attachment:fixed;
+  color:var(--ink);
+  font-family:"Plus Jakarta Sans","Segoe UI",system-ui,-apple-system,sans-serif;
+  min-height:100vh;
+  overflow-x:hidden;
+  position:relative;
+}
+/* Subtle architectural grid overlay */
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background-image:radial-gradient(var(--line-strong) 1px, transparent 1px);
+  background-size:28px 28px;
+  opacity:.42;
+  pointer-events:none;
+  z-index:0;
+  mask-image:radial-gradient(ellipse at center, black 45%, transparent 90%);
+  -webkit-mask-image:radial-gradient(ellipse at center, black 45%, transparent 90%);
+}
+
+/* Floating ambient aurora orbs */
+.blob{position:fixed;border-radius:50%;filter:blur(90px);opacity:.42;z-index:0;pointer-events:none;animation:fl 18s cubic-bezier(.4,0,.2,1) infinite alternate}
+.b1{width:380px;height:380px;background:var(--y);top:-110px;left:-80px}
+.b2{width:340px;height:340px;background:var(--p);bottom:-80px;right:-70px;animation-delay:-6s}
+.b3{width:300px;height:300px;background:var(--b);top:38%;left:52%;animation-delay:-11s;opacity:.28}
+@keyframes fl{
+  0%{transform:translate(0,0) scale(1) rotate(0deg)}
+  50%{transform:translate(45px,-35px) scale(1.12) rotate(12deg)}
+  100%{transform:translate(-25px,30px) scale(.94) rotate(-8deg)}
+}
+
+.wrap{position:relative;z-index:1;max-width:1020px;margin:0 auto;padding:22px 18px 56px}
+
+/* Glassmorphic Luxury Navbar */
+header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  background:var(--card);
+  backdrop-filter:blur(24px) saturate(180%);
+  -webkit-backdrop-filter:blur(24px) saturate(180%);
+  border:1px solid var(--line);
+  padding:13px 20px;
+  border-radius:24px;
+  box-shadow:var(--shadow-sm), inset 0 1px 0 rgba(255,255,255,.35);
+  transition:transform .25s ease,box-shadow .25s ease;
+}
+.brand{display:flex;align-items:center;gap:13px;font-weight:800;font-size:22px;letter-spacing:-.5px}
+.badge-unofficial{
+  font-size:10.5px;
+  font-weight:800;
+  text-transform:uppercase;
+  letter-spacing:.6px;
+  padding:3px 10px;
+  border-radius:999px;
+  background:linear-gradient(135deg,rgba(254,238,0,.28),rgba(45,107,255,.15));
+  border:1px solid var(--line-strong);
+  color:var(--ink);
+  margin-top:3px;
+  display:inline-block;
+}
+.logo{
+  animation:bob 3.6s ease-in-out infinite;
+  flex-shrink:0;
+  filter:drop-shadow(0 6px 14px rgba(254,238,0,.35));
+}
+@keyframes bob{50%{transform:translateY(-4px) rotate(-3deg)}}
+
+#theme{
+  border:1px solid var(--line-strong);
+  background:var(--card-elev);
+  color:var(--ink);
+  border-radius:999px;
+  width:44px;
+  height:44px;
+  display:grid;
+  place-items:center;
+  cursor:pointer;
+  font-size:18px;
+  box-shadow:var(--shadow-sm);
+  transition:transform .25s cubic-bezier(.22,1,.36,1),border-color .2s,box-shadow .2s;
+}
+#theme:hover{transform:rotate(15deg) scale(1.08);border-color:var(--b);box-shadow:var(--glow)}
+
+/* Hero Section with Shimmering Gradient Typography */
+.hero{text-align:center;padding:38px 12px 24px}
+.hero-pill{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:6px 14px;
+  border-radius:999px;
+  background:var(--card);
+  border:1px solid var(--line-strong);
+  font-size:12px;
+  font-weight:700;
+  color:var(--muted);
+  margin-bottom:14px;
+  box-shadow:var(--shadow-sm);
+  backdrop-filter:blur(12px);
+}
+.hero-dot{
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  background:var(--g);
+  box-shadow:0 0 10px var(--g);
+  animation:pulseDot 2s infinite;
+}
+@keyframes pulseDot{50%{transform:scale(1.35);opacity:.65}}
+
+.hero h1{
+  font-size:clamp(36px,7.5vw,64px);
+  margin:0;
+  line-height:1.05;
+  letter-spacing:-1.8px;
+  font-weight:800;
+  background:linear-gradient(110deg,var(--ink) 15%,var(--b) 38%,var(--p) 58%,#ff9f1c 78%,var(--g) 95%);
+  background-size:250% 100%;
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+  animation:flow 8s ease-in-out infinite alternate;
+}
+@keyframes flow{to{background-position:100% 0}}
+.hero p{color:var(--muted);margin:12px auto 0;max-width:540px;font-size:16px;line-height:1.55;font-weight:500}
+
+/* Segmented Floating Pill Navigation */
+nav{
+  display:flex;
+  gap:8px;
+  justify-content:center;
+  flex-wrap:wrap;
+  margin:18px auto 26px;
+  background:var(--card);
+  backdrop-filter:blur(20px);
+  padding:7px;
+  border-radius:22px;
+  border:1px solid var(--line-strong);
+  width:fit-content;
+  box-shadow:var(--shadow-sm), inset 0 1px 0 rgba(255,255,255,.25);
+}
+nav button{
+  border:1.5px solid transparent;
+  background:transparent;
+  color:var(--muted);
+  font:inherit;
+  font-weight:800;
+  font-size:14.5px;
+  padding:11px 22px;
+  border-radius:16px;
+  cursor:pointer;
+  transition:all .25s cubic-bezier(.22,1,.36,1);
+}
+nav button:hover{color:var(--ink);transform:translateY(-1px)}
+nav button.on{
+  background:linear-gradient(135deg,var(--y),#ffd000);
+  color:#111110;
+  border-color:#111110;
+  box-shadow:0 6px 18px rgba(254,238,0,.4), 2px 2px 0 #111110;
+  transform:translateY(-1px);
+}
+
+/* Main Studio Glass Panel */
+.panel{
+  display:none;
+  background:var(--card);
+  backdrop-filter:blur(26px) saturate(180%);
+  -webkit-backdrop-filter:blur(26px) saturate(180%);
+  border:1px solid var(--line-strong);
+  border-radius:32px;
+  padding:30px;
+  box-shadow:var(--shadow), inset 0 1px 0 rgba(255,255,255,.35);
+  position:relative;
+  overflow:hidden;
+}
+.panel::before{
+  content:"";
+  position:absolute;
+  top:0;left:10%;right:10%;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.8),transparent);
+  pointer-events:none;
+}
+.panel.on{display:block;animation:panelIn .45s cubic-bezier(.22,1,.36,1)}
+@keyframes panelIn{
+  from{transform:translateY(14px) scale(.985);opacity:0}
+  to{transform:translateY(0) scale(1);opacity:1}
+}
+
+h2{margin:0 0 18px;font-size:24px;font-weight:800;letter-spacing:-.5px;display:flex;align-items:center;gap:10px}
+input,select,textarea{
+  font:inherit;
+  color:var(--ink);
+  background:var(--card-elev);
+  border:1.5px solid var(--line-strong);
+  border-radius:16px;
+  padding:13px 16px;
+  width:100%;
+  outline:none;
+  transition:border-color .2s,box-shadow .2s,transform .15s;
+}
+input:focus-visible,button:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid var(--b);outline-offset:2px}
+input:focus,select:focus,textarea:focus{
+  border-color:var(--b);
+  box-shadow:0 0 0 4px rgba(45,107,255,.15);
+}
+
+/* Input wrapper with instant Clear (✕) button */
+.input-wrap{
+  position:relative;
+  display:flex;
+  align-items:center;
+}
+.input-wrap input{
+  padding-right:46px;
+  font-weight:600;
+}
+.clear-x{
+  position:absolute;
+  right:8px;
+  width:32px;
+  height:32px;
+  border-radius:10px;
+  border:1px solid var(--line);
+  background:var(--card);
+  color:var(--muted);
+  font-size:15px;
+  font-weight:800;
+  cursor:pointer;
+  display:grid;
+  place-items:center;
+  transition:all .18s ease;
+}
+.clear-x:hover{
+  background:var(--p);
+  color:#fff;
+  border-color:var(--p);
+  transform:scale(1.06);
+}
+
+.btn{
+  border:1.5px solid #111110;
+  font:inherit;
+  font-weight:800;
+  color:#111110;
+  background:linear-gradient(135deg,var(--y),var(--y-dark));
+  padding:13px 24px;
+  border-radius:16px;
+  cursor:pointer;
+  box-shadow:0 8px 20px -4px rgba(245,183,0,.45), 2px 2px 0 #111110;
+  transition:transform .16s cubic-bezier(.22,1,.36,1),box-shadow .16s;
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+}
+.btn:hover{transform:translate(-2px,-2px);box-shadow:0 12px 24px -4px rgba(245,183,0,.55), 4px 4px 0 #111110}
+.btn:active{transform:translate(1px,1px);box-shadow:1px 1px 0 #111110}
+
+.btn-sec{
+  border:1.5px solid var(--line-strong);
+  font:inherit;
+  font-weight:800;
+  color:var(--ink);
+  background:var(--card-elev);
+  padding:13px 18px;
+  border-radius:16px;
+  cursor:pointer;
+  box-shadow:var(--shadow-sm);
+  transition:transform .16s,border-color .16s;
+}
+.btn-sec:hover{transform:translateY(-2px);border-color:var(--b)}
+
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.qrgrid{display:grid;grid-template-columns:1.15fr .85fr;gap:26px;align-items:stretch}
+@media(max-width:740px){.qrgrid{grid-template-columns:1fr}}
+
+/* Futuristic QR Showcase Stage */
+.qr-stage{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  border-radius:26px;
+  background:linear-gradient(145deg,#ffffff,#f7f6f0);
+  border:2px solid var(--line-strong);
+  padding:22px 18px 18px;
+  box-shadow:var(--shadow-sm), inset 0 2px 12px rgba(0,0,0,.03);
+  position:relative;
+  transition:transform .25s ease,box-shadow .25s ease;
+}
+.qr-stage::after{
+  content:"";
+  position:absolute;
+  inset:8px;
+  border:1.5px dashed rgba(17,17,16,.12);
+  border-radius:20px;
+  pointer-events:none;
+}
+.qrbox{
+  display:grid;
+  place-items:center;
+  min-height:220px;
+  padding:12px;
+  z-index:1;
+}
+.qrbox img,.qrbox canvas{
+  max-width:100%;
+  height:auto;
+  border-radius:12px;
+  box-shadow:0 8px 24px rgba(0,0,0,.08);
+  animation:qrPop .35s cubic-bezier(.22,1,.36,1);
+}
+@keyframes qrPop{
+  from{transform:scale(.88);opacity:0}
+  to{transform:scale(1);opacity:1}
+}
+/* Barcode / QR Text Label Underneath */
+.qr-caption{
+  z-index:1;
+  margin-top:10px;
+  padding:8px 16px;
+  border-radius:12px;
+  background:#111110;
+  color:#feee00;
+  font-family:"JetBrains Mono",monospace;
+  font-size:13.5px;
+  font-weight:700;
+  max-width:92%;
+  word-break:break-all;
+  text-align:center;
+  box-shadow:0 4px 12px rgba(0,0,0,.15);
+  border:1px solid rgba(254,238,0,.35);
+}
+
+/* Saved QR Code Vault / History Section */
+.qr-vault{
+  margin-top:26px;
+  padding-top:20px;
+  border-top:1px solid var(--line-strong);
+}
+.qr-vault-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
+  gap:12px;
+  margin-top:12px;
+}
+.qr-saved-card{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  padding:11px 13px;
+  border-radius:16px;
+  background:var(--card-elev);
+  border:1.5px solid var(--line);
+  cursor:pointer;
+  transition:all .2s cubic-bezier(.22,1,.36,1);
+  box-shadow:var(--shadow-sm);
+}
+.qr-saved-card:hover{
+  transform:translateY(-3px);
+  border-color:var(--b);
+  box-shadow:0 12px 24px -6px rgba(45,107,255,.2);
+}
+.qr-saved-info{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  min-width:0;
+  flex:1;
+}
+.qr-swatch{
+  width:28px;
+  height:28px;
+  border-radius:8px;
+  border:1.5px solid var(--line-strong);
+  display:grid;
+  place-items:center;
+  font-size:13px;
+  flex-shrink:0;
+}
+.qr-saved-text{
+  font-weight:700;
+  font-size:13.5px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.qr-saved-meta{
+  font-size:11px;
+  color:var(--muted);
+}
+.qr-del-btn{
+  border:0;
+  background:transparent;
+  color:var(--muted);
+  font-size:14px;
+  font-weight:800;
+  width:26px;
+  height:26px;
+  border-radius:8px;
+  cursor:pointer;
+  flex-shrink:0;
+  transition:background .15s,color .15s;
+}
+.qr-del-btn:hover{background:rgba(255,61,129,.15);color:var(--p)}
+
+.hint{color:var(--muted);font-size:13px;margin-top:8px}
+label{font-size:12.5px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);display:inline-block;margin-bottom:6px}
+input[type=color]{padding:3px;height:46px;width:68px;cursor:pointer;border-radius:14px}
+
+/* Upgraded Tactile Calculator UI */
+.calc{
+  max-width:370px;
+  margin:0 auto;
+  background:var(--card-elev);
+  border:1.5px solid var(--line-strong);
+  border-radius:28px;
+  padding:20px;
+  box-shadow:var(--shadow-sm);
+}
+.screen{
+  background:linear-gradient(145deg,#171715,#0c0c0b);
+  color:#feee00;
+  border-radius:22px;
+  padding:16px 20px;
+  text-align:right;
+  margin-bottom:16px;
+  min-height:104px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  border:1px solid rgba(255,255,255,.1);
+  box-shadow:inset 0 4px 16px rgba(0,0,0,.6);
+}
+.screen small{
+  display:block;
+  color:#a8a47a;
+  font-family:"JetBrains Mono",monospace;
+  font-size:13.5px;
+  min-height:20px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.screen output{
+  display:block;
+  font-family:"JetBrains Mono",monospace;
+  font-size:36px;
+  font-weight:800;
+  letter-spacing:-.5px;
+  overflow-x:auto;
+  white-space:nowrap;
+  scrollbar-width:none;
+}
+.screen output::-webkit-scrollbar{display:none}
+
+.keys{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+}
+.keys button{
+  border:1.5px solid var(--line-strong);
+  font-family:"JetBrains Mono",monospace;
+  font-size:20px;
+  font-weight:800;
+  padding:16px 0;
+  border-radius:16px;
+  cursor:pointer;
+  background:var(--card);
+  color:var(--ink);
+  box-shadow:0 4px 0 var(--line-strong);
+  transition:transform .1s,box-shadow .1s,border-color .15s;
+  user-select:none;
+}
+.keys button:hover{border-color:var(--b);transform:translateY(-1px)}
+.keys button:active{transform:translateY(3px);box-shadow:0 1px 0 var(--line-strong)}
+.keys .op{
+  background:linear-gradient(135deg,#2d6bff,#5b42f3);
+  color:#fff;
+  border-color:transparent;
+  box-shadow:0 4px 0 rgba(25,50,165,.45);
+}
+.keys .fn{
+  background:linear-gradient(135deg,#ff3d81,#ff7052);
+  color:#fff;
+  border-color:transparent;
+  box-shadow:0 4px 0 rgba(175,25,75,.45);
+}
+.keys .eq{
+  background:linear-gradient(135deg,#10c98f,#059669);
+  color:#fff;
+  border-color:transparent;
+  box-shadow:0 4px 0 rgba(5,100,70,.5);
+  font-size:22px;
+}
+
+.hbox{margin-top:18px;border-top:1px solid var(--line-strong);padding-top:14px}
+.hbox ul{list-style:none;margin:10px 0 0;padding:0;max-height:190px;overflow-y:auto}
+.hbox li{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  padding:10px 14px;
+  margin-bottom:6px;
+  border-radius:13px;
+  background:var(--card);
+  border:1px solid var(--line);
+  cursor:pointer;
+  font-family:"JetBrains Mono",monospace;
+  font-size:13.5px;
+  transition:border-color .15s,transform .12s;
+}
+.hbox li b{color:var(--g);font-weight:800}
+.hbox li:hover{border-color:var(--y-dark);transform:translateX(3px)}
+
+/* Bento Utility Grid */
+.tools{display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:14px}
+.tool{
+  position:relative;
+  background:var(--card-elev);
+  border:1.5px solid var(--line);
+  border-radius:22px;
+  padding:18px 16px 16px;
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  cursor:pointer;
+  text-align:left;
+  transition:all .22s cubic-bezier(.22,1,.36,1);
+  box-shadow:var(--shadow-sm);
+}
+.tool:hover{transform:translateY(-4px);border-color:var(--b);box-shadow:0 14px 28px -8px rgba(45,107,255,.2)}
+.tool.active-tool{border:2px solid var(--b);box-shadow:0 10px 24px -4px rgba(45,107,255,.22)}
+.tool .ti{font-size:32px;display:inline-block;animation:bob 3.2s ease-in-out infinite}
+.tool:nth-child(2n) .ti{animation-delay:-1s}.tool:nth-child(3n) .ti{animation-delay:-2s}
+.tool h3{margin:6px 0 0;font-size:16.5px;font-weight:800}
+.tool p{margin:0 0 8px;color:var(--muted);font-size:13px;line-height:1.4}
+.soon{
+  align-self:flex-start;
+  margin-top:auto;
+  background:linear-gradient(135deg,var(--g),var(--b));
+  color:#fff;
+  font-size:11.5px;
+  font-weight:800;
+  padding:4px 12px;
+  border-radius:999px;
+}
+.tool-workspace{
+  margin-top:22px;
+  background:var(--card-elev);
+  border:1.5px solid var(--line-strong);
+  border-radius:24px;
+  padding:22px;
+  box-shadow:var(--shadow-sm);
+}
+.result-pill{
+  margin-top:12px;
+  padding:13px 16px;
+  border-radius:14px;
+  background:rgba(16,201,143,.12);
+  border:1.5px solid var(--g);
+  font-weight:800;
+  word-break:break-all;
+}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+.chip{
+  border:1px solid var(--line-strong);
+  background:var(--card-elev);
+  color:var(--ink);
+  padding:7px 14px;
+  border-radius:999px;
+  cursor:pointer;
+  font:inherit;
+  font-size:13px;
+  font-weight:700;
+  transition:all .16s ease;
+}
+.chip:hover{background:var(--y);color:#111110;border-color:#111110;transform:translateY(-1px)}
+
+/* Secret Embedded Google Search Section at the bottom */
+#secret-search{
+  display:none;
+  margin-top:30px;
+  background:var(--card);
+  backdrop-filter:blur(24px);
+  border:2px solid var(--b);
+  border-radius:30px;
+  padding:24px;
+  box-shadow:var(--shadow);
+  animation:panelIn .4s cubic-bezier(.22,1,.36,1);
+}
+#secret-search.on{display:block}
+.secret-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-bottom:14px;
+}
+.frame{
+  width:100%;
+  height:68vh;
+  min-height:420px;
+  border:2px solid var(--line-strong);
+  border-radius:20px;
+  background:#fff;
+  display:block;
+  margin-top:12px;
+}
+
+footer{text-align:center;color:var(--muted);font-size:13px;margin-top:34px;padding-top:20px;border-top:1px solid var(--line-strong);line-height:1.55}
+footer a{color:var(--ink);font-weight:800;text-decoration:none;border-bottom:1.5px solid var(--y-dark)}
+.disclaimer-box{max-width:760px;margin:12px auto 0;font-size:12px;color:var(--muted);background:var(--card);border:1px solid var(--line-strong);border-radius:16px;padding:12px 16px;backdrop-filter:blur(12px)}
+
+#devbtn{
+  position:fixed;
+  right:18px;
+  bottom:calc(18px + env(safe-area-inset-bottom,0px));
+  z-index:5;
+  width:38px;
+  height:38px;
+  border-radius:50%;
+  border:1.5px solid #111110;
+  background:linear-gradient(135deg,var(--y),var(--y-dark));
+  color:#111110;
+  font-size:18px;
+  font-weight:800;
+  line-height:1;
+  padding:0;
+  cursor:pointer;
+  box-shadow:var(--shadow-sm);
+  transition:transform .2s cubic-bezier(.22,1,.36,1);
+}
+#devbtn:hover{transform:rotate(-10deg) scale(1.12)}
+.ov{position:fixed;inset:0;z-index:20;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.6);backdrop-filter:blur(6px);padding:20px}
+.ov.on{display:flex}
+.dev{width:100%;max-width:370px;background:var(--bg);color:var(--ink);border:2px solid var(--line-strong);border-radius:28px;padding:28px 24px;text-align:center;box-shadow:var(--shadow);animation:panelIn .35s cubic-bezier(.22,1,.36,1)}
+.dev img,.av{width:112px;height:112px;border-radius:50%;object-fit:cover;border:4px solid var(--y);margin:0 auto 12px;display:block;box-shadow:var(--glow)}
+.av{display:none;background:var(--y);color:#161616;font-size:46px;font-weight:900;line-height:104px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
+<div class="wrap">
+<header>
+  <div class="brand">
+    <svg class="logo" width="52" height="52" viewBox="0 0 54 54" aria-label="Noon Mate logo"><rect width="54" height="54" rx="16" fill="#feee00" stroke="#111110" stroke-width="2.5"/><text x="27" y="30" text-anchor="middle" font-family="Plus Jakarta Sans,Trebuchet MS,Arial,sans-serif" font-weight="900" font-size="17" fill="#111110">noon</text><path d="M15 38q12 9 24 0" stroke="#111110" stroke-width="3" fill="none" stroke-linecap="round"/><circle cx="43" cy="12" r="3.5" fill="#ff3d81"/></svg>
+    <div>
+      <span>noon mate</span>
+      <div><span class="badge-unofficial">Unofficial Utility Toolkit</span></div>
+    </div>
+  </div>
+  <button id="theme" type="button" aria-label="Toggle theme">🌓</button>
+</header>
+
+<section class="hero">
+  <div class="hero-pill"><span class="hero-dot"></span> Fast • Private • Browser-Native Suite</div>
+  <h1>Your everyday toolkit</h1>
+  <p>Generate instant QR codes with saved history, run smart calculations, and access everyday helper utilities in one workspace.</p>
+</section>
+
+<nav id="tabs">
+  <button class="on" type="button" data-t="qr">QR Code</button>
+  <button type="button" data-t="calc">Calculator</button>
+  <button type="button" data-t="more">More Tools</button>
+</nav>
+
+<section class="panel on" id="qr">
+  <h2>✨ QR Code Studio</h2>
+  <div class="qrgrid">
+    <div>
+      <label for="qtext">Text or link</label>
+      <div class="input-wrap">
+        <input id="qtext" placeholder="Enter URL or text (e.g. sahensa.com)..." value="sahensa.com">
+        <button id="qclear" class="clear-x" type="button" title="Clear QR text" aria-label="Clear QR text">✕</button>
+      </div>
+      <div class="row" style="margin-top:14px">
+        <div><label for="qfg">QR color</label><br><input type="color" id="qfg" value="#111110"></div>
+        <div><label for="qbg">Background</label><br><input type="color" id="qbg" value="#ffffff"></div>
+        <div style="flex:1;min-width:120px"><label for="qsz">Size</label>
+          <select id="qsz"><option value="180">Small (180px)</option><option value="240" selected>Medium (240px)</option><option value="300">Large (300px)</option></select>
+        </div>
+      </div>
+      <div class="row" style="margin-top:18px">
+        <button class="btn" id="qgo" type="button">Generate QR</button>
+        <button class="btn-sec" id="qdl" type="button">⬇ Save Image</button>
+      </div>
+      <p class="hint">Every generated QR code is automatically saved below so you can bring it back in one tap.</p>
+    </div>
+
+    <div class="qr-stage">
+      <div class="qrbox" id="qrbox"></div>
+      <div class="qr-caption" id="qcaption">sahensa.com</div>
+    </div>
+  </div>
+
+  <div class="qr-vault">
+    <div class="row" style="justify-content:space-between">
+      <strong>📌 Saved QR Codes (Tap any item to restore)</strong>
+      <button class="chip" id="qhistclr" type="button">Clear saved QRs</button>
+    </div>
+    <div class="qr-vault-grid" id="qhistlist"></div>
+  </div>
+</section>
+
+<section class="panel" id="calc">
+  <h2>🧮 Smart Calculator</h2>
+  <div class="calc">
+    <div class="screen">
+      <small id="hist"></small>
+      <output id="out">0</output>
+    </div>
+    <div class="keys" id="keys"></div>
+    <div class="hbox">
+      <div class="row" style="justify-content:space-between">
+        <strong>History</strong>
+        <button class="chip" id="hclr" type="button">Clear history</button>
+      </div>
+      <ul id="hlist"></ul>
+    </div>
+  </div>
+</section>
+
+<section class="panel" id="more">
+  <h2>🧰 More tools</h2>
+  <p class="hint" style="margin:0 0 14px">Tap any utility below to open and use it right inside your browser.</p>
+  <div class="tools" id="toolgrid">
+    <div class="tool active-tool" data-tool="unit"><span class="ti">📏</span><h3>Unit converter</h3><p>Length, weight and temperature in one tap.</p><span class="soon">Open tool</span></div>
+    <div class="tool" data-tool="age"><span class="ti">🎂</span><h3>Age calculator</h3><p>Find your exact age in years, months and days.</p><span class="soon">Open tool</span></div>
+    <div class="tool" data-tool="pass"><span class="ti">🔐</span><h3>Password generator</h3><p>Create strong, random strings locally.</p><span class="soon">Open tool</span></div>
+    <div class="tool" data-tool="color"><span class="ti">🎨</span><h3>Color picker</h3><p>Pick colors and copy HEX or RGB codes.</p><span class="soon">Open tool</span></div>
+    <div class="tool" data-tool="word"><span class="ti">🔤</span><h3>Word counter</h3><p>Count words, characters and reading time.</p><span class="soon">Open tool</span></div>
+    <div class="tool" data-tool="tip"><span class="ti">💸</span><h3>Tip splitter</h3><p>Split a bill between friends with tip included.</p><span class="soon">Open tool</span></div>
+    <div class="tool" data-tool="timer"><span class="ti">⏱️</span><h3>Stopwatch</h3><p>Simple browser stopwatch with lap tracking.</p><span class="soon">Open tool</span></div>
+    <div class="tool" data-tool="notes"><span class="ti">📝</span><h3>Quick notes</h3><p>Jot down notes that stay on your device.</p><span class="soon">Open tool</span></div>
+  </div>
+  <div class="tool-workspace" id="toolview"></div>
+</section>
+
+<!-- Hidden Embedded Google Search Section (Unlocked via 5656+4646 in Calculator) -->
+<section id="secret-search" aria-label="Embedded Google Search">
+  <div class="secret-head">
+    <h2 style="margin:0">🔍 Embedded Google Search</h2>
+    <button class="chip" id="sclose" type="button">Hide Search ✕</button>
+  </div>
+  <form id="sform" class="row" style="margin-bottom:10px">
+    <input id="sq" placeholder="Search Google right inside this page..." style="flex:1;min-width:200px">
+    <button class="btn" id="sbtn" type="submit">Search</button>
+  </form>
+  <div class="chips">
+    <button class="chip sq-chip" type="button" data-q="Noon">Noon</button>
+    <button class="chip sq-chip" type="button" data-q="Riyadh weather">Riyadh weather</button>
+    <button class="chip sq-chip" type="button" data-q="SAR to BDT">SAR to BDT</button>
+    <button class="chip sq-chip" type="button" data-q="Translate English to Bengali">Translator</button>
+  </div>
+  <iframe id="gframe" class="frame" title="Embedded Google Search" sandbox="allow-scripts allow-same-origin allow-forms" referrerpolicy="no-referrer"></iframe>
+</section>
+
+<footer>
+  <div>Made by <strong>Talha</strong> (<a href="https://github.com/talhaxpremium-sys" target="_blank" rel="noopener noreferrer">@talhaxpremium-sys</a>) • Open-Source Personal Web Development Project</div>
+  <div class="disclaimer-box">
+    <strong>Disclaimer:</strong> Noon Mate is an independent, non-commercial browser utility toolkit created for everyday productivity. It is <strong>not</strong> an official Noon login portal or corporate system, and it does not request, store, or collect any employee passwords, credentials, or personal data.
+  </div>
+</footer>
+
+<button id="devbtn" type="button" aria-label="Developer details">ⓘ</button>
+<div class="ov" id="ov"><div class="dev" role="dialog" aria-label="Developer details">
+  <img id="dimg" src="https://i.ibb.co/1J9kypVg/20260607-202744-3.jpg" alt="Developer photo" referrerpolicy="no-referrer">
+  <div class="av" id="dav">T</div>
+  <h3 style="margin:0">Talha (@talhaxpremium-sys)</h3>
+  <p class="hint">Independent Developer of Noon Mate</p>
+  <p style="margin:8px 0 12px">Building simple, fast, non-commercial browser utilities with HTML, CSS &amp; JavaScript.</p>
+  <p style="margin:0 0 16px;font-size:13px"><a href="https://github.com/talhaxpremium-sys/talhaxpremium-sys.github.io" target="_blank" rel="noopener noreferrer" style="color:var(--b);font-weight:800">View Source on GitHub ↗</a></p>
+  <button class="btn" id="dclose" type="button">Close</button>
+</div></div>
+</div>
+
+<script>
+// Storage helpers
+function ld(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}}
+function sv(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+
+// Developer modal
+var ov=document.getElementById('ov'),dimg=document.getElementById('dimg');
+dimg.onerror=function(){dimg.style.display='none';document.getElementById('dav').style.display='block'};
+document.getElementById('devbtn').onclick=function(){ov.classList.add('on')};
+document.getElementById('dclose').onclick=function(){ov.classList.remove('on')};
+ov.onclick=function(e){if(e.target===ov)ov.classList.remove('on')};
+
+// Theme toggle
+var root=document.documentElement;
+document.getElementById('theme').onclick=function(){
+  var dark=root.getAttribute('data-theme')?root.getAttribute('data-theme')==='dark':matchMedia('(prefers-color-scheme:dark)').matches;
+  root.setAttribute('data-theme',dark?'light':'dark');
+};
+
+// Tabs
+var tabs=document.querySelectorAll('#tabs button');
+tabs.forEach(function(b){b.onclick=function(){
+  tabs.forEach(function(x){x.classList.toggle('on',x===b)});
+  document.querySelectorAll('.panel').forEach(function(p){p.classList.toggle('on',p.id===b.dataset.t)});
+}});
+
+// QR Studio + Caption + Saved QR Vault
+var qtextInput=document.getElementById('qtext');
+var qcaption=document.getElementById('qcaption');
+var qrHist=ld('nm_qr_hist')||[
+  {t:'sahensa.com',fg:'#111110',bg:'#ffffff',sz:'240'}
+];
+
+function renderQRHist(){
+  var list=document.getElementById('qhistlist');
+  list.innerHTML='';
+  if(!qrHist.length){
+    var empty=document.createElement('div');
+    empty.className='hint';
+    empty.textContent='No saved QR codes yet. Generate one above and it will appear here.';
+    list.appendChild(empty);
+    return;
+  }
+  qrHist.forEach(function(item,idx){
+    var card=document.createElement('div');
+    card.className='qr-saved-card';
+    var info=document.createElement('div');
+    info.className='qr-saved-info';
+    var sw=document.createElement('div');
+    sw.className='qr-swatch';
+    sw.style.background=item.bg||'#ffffff';
+    sw.style.color=item.fg||'#111110';
+    sw.textContent='▣';
+    var txtWrap=document.createElement('div');
+    txtWrap.style.minWidth='0';
+    var title=document.createElement('div');
+    title.className='qr-saved-text';
+    title.textContent=item.t;
+    var meta=document.createElement('div');
+    meta.className='qr-saved-meta';
+    meta.textContent=(item.sz||'240')+'px • Tap to load';
+    txtWrap.appendChild(title);
+    txtWrap.appendChild(meta);
+    info.appendChild(sw);
+    info.appendChild(txtWrap);
+
+    var del=document.createElement('button');
+    del.type='button';
+    del.className='qr-del-btn';
+    del.textContent='✕';
+    del.title='Remove from saved';
+    del.onclick=function(ev){
+      ev.stopPropagation();
+      qrHist.splice(idx,1);
+      sv('nm_qr_hist',qrHist);
+      renderQRHist();
+    };
+
+    card.onclick=function(){
+      qtextInput.value=item.t;
+      document.getElementById('qfg').value=item.fg||'#111110';
+      document.getElementById('qbg').value=item.bg||'#ffffff';
+      document.getElementById('qsz').value=item.sz||'240';
+      makeQR(false);
+    };
+    card.appendChild(info);
+    card.appendChild(del);
+    list.appendChild(card);
+  });
+}
+
+function saveToQRHist(t,fg,bg,sz){
+  qrHist=qrHist.filter(function(x){return x.t!==t});
+  qrHist.unshift({t:t,fg:fg,bg:bg,sz:String(sz)});
+  qrHist=qrHist.slice(0,24);
+  sv('nm_qr_hist',qrHist);
+  renderQRHist();
+}
+
+function makeQR(saveFlag){
+  var box=document.getElementById('qrbox');
+  box.innerHTML='';
+  var t=qtextInput.value.trim();
+  if(!t){
+    box.textContent='Type something, then press Generate.';
+    box.style.color='#666';
+    qcaption.textContent='No active barcode / QR text';
+    return;
+  }
+  var s=+document.getElementById('qsz').value;
+  var fg=document.getElementById('qfg').value;
+  var bg=document.getElementById('qbg').value;
+  try{
+    new QRCode(box,{text:t,width:s,height:s,colorDark:fg,colorLight:bg,correctLevel:QRCode.CorrectLevel.H});
+    qcaption.textContent=t;
+    if(saveFlag!==false){
+      saveToQRHist(t,fg,bg,s);
+    }
+  }catch(e){
+    box.textContent='Text is too long. Shorten it and try again.';
+    qcaption.textContent='Error: text too long';
+  }
+}
+
+document.getElementById('qgo').onclick=function(){makeQR(true)};
+document.getElementById('qclear').onclick=function(){
+  qtextInput.value='';
+  makeQR(false);
+  qtextInput.focus();
+};
+document.getElementById('qhistclr').onclick=function(){
+  qrHist=[];
+  sv('nm_qr_hist',qrHist);
+  renderQRHist();
+};
+['qfg','qbg','qsz'].forEach(function(i){
+  document.getElementById(i).onchange=function(){makeQR(true)};
+});
+qtextInput.addEventListener('keydown',function(e){
+  if(e.key==='Enter'){e.preventDefault();makeQR(true);}
+});
+
+// Download QR image with its label text below it
+document.getElementById('qdl').onclick=function(){
+  var srcCanvas=document.querySelector('#qrbox canvas');
+  var srcImg=document.querySelector('#qrbox img');
+  var t=qtextInput.value.trim()||'sahensa.com';
+  var source=srcCanvas||srcImg;
+  if(!source){makeQR(true);source=document.querySelector('#qrbox canvas')||document.querySelector('#qrbox img');}
+  if(!source)return;
+  var w=(source.width||240)+40;
+  var h=(source.height||240)+76;
+  var c=document.createElement('canvas');
+  c.width=w;c.height=h;
+  var ctx=c.getContext('2d');
+  ctx.fillStyle=document.getElementById('qbg').value||'#ffffff';
+  ctx.fillRect(0,0,w,h);
+  ctx.drawImage(source,20,20,w-40,w-40);
+  ctx.fillStyle='#111110';
+  ctx.font='bold 15px monospace';
+  ctx.textAlign='center';
+  var label=t.length>34?t.slice(0,31)+'...':t;
+  ctx.fillText(label,w/2,h-24);
+  var a=document.createElement('a');
+  a.download='qr-'+t.replace(/[^a-z0-9]/gi,'_').slice(0,24)+'.png';
+  a.href=c.toDataURL('image/png');
+  a.click();
+};
+
+window.addEventListener('load',function(){
+  renderQRHist();
+  makeQR(false);
+});
+
+// Secret Embedded Google Search Logic
+var secretBox=document.getElementById('secret-search');
+var gframe=document.getElementById('gframe');
+var sqInput=document.getElementById('sq');
+
+function unlockSecretSearch(initialQuery){
+  secretBox.classList.add('on');
+  var targetUrl='https://www.google.com/webhp?igu=1';
+  if(initialQuery){
+    targetUrl='https://www.google.com/search?igu=1&q='+encodeURIComponent(initialQuery);
+  }
+  if(!gframe.getAttribute('src')||initialQuery){
+    gframe.setAttribute('src',targetUrl);
+  }
+  setTimeout(function(){
+    secretBox.scrollIntoView({behavior:'smooth',block:'start'});
+  },120);
+}
+
+document.getElementById('sform').onsubmit=function(e){
+  e.preventDefault();
+  var q=sqInput.value.trim();
+  gframe.setAttribute('src',q?'https://www.google.com/search?igu=1&q='+encodeURIComponent(q):'https://www.google.com/webhp?igu=1');
+};
+document.querySelectorAll('.sq-chip').forEach(function(btn){
+  btn.onclick=function(){
+    var q=btn.dataset.q;
+    sqInput.value=q;
+    gframe.setAttribute('src','https://www.google.com/search?igu=1&q='+encodeURIComponent(q));
+  };
+});
+document.getElementById('sclose').onclick=function(){
+  secretBox.classList.remove('on');
+};
+
+// Calculator (4x5 clean grid, trailing-operator tolerant, secret code 5656+4646)
+var expr='',out=document.getElementById('out'),hist=document.getElementById('hist'),H=[];
+H=ld('nm_hist')||[];expr=ld('nm_expr')||'';
+
+function renderH(){
+  var ul=document.getElementById('hlist');ul.innerHTML='';
+  if(!H.length){var li=document.createElement('li');li.textContent='No calculations yet.';li.style.cursor='default';ul.appendChild(li);return}
+  H.forEach(function(h){
+    var li=document.createElement('li');
+    var a=document.createElement('span');a.textContent=h.e;
+    var b=document.createElement('b');b.textContent='= '+h.r;
+    li.appendChild(a);li.appendChild(b);
+    li.onclick=function(){expr=h.r;show()};
+    ul.appendChild(li);
+  });
+}
+document.getElementById('hclr').onclick=function(){H=[];sv('nm_hist',H);renderH()};
+window.addEventListener('load',function(){show();renderH();hist.textContent=ld('nm_last')||''});
+
+var layout=[
+  ['C','fn'],['(','op'],[')','op'],['÷','op'],
+  ['7'],['8'],['9'],['×','op'],
+  ['4'],['5'],['6'],['−','op'],
+  ['1'],['2'],['3'],['+','op'],
+  ['0'],['.'],['⌫','fn'],['=','eq']
+];
+var kb=document.getElementById('keys');
+layout.forEach(function(k){
+  var b=document.createElement('button');
+  b.type='button';
+  b.textContent=k[0];
+  if(k[1])b.className=k[1];
+  b.onclick=function(){press(k[0])};
+  kb.appendChild(b);
+});
+
+function sanitizeExpr(raw){
+  var s=raw.replace(/×/g,'*').replace(/÷/g,'/').replace(/−/g,'-');
+  s=s.replace(/[+\-*/.(]+$/,'');
+  var openCount=(s.match(/\(/g)||[]).length;
+  var closeCount=(s.match(/\)/g)||[]).length;
+  while(openCount>closeCount){s+=')';closeCount++;}
+  return s;
+}
+
+function show(){
+  out.textContent=expr||'0';
+  sv('nm_expr',expr);
+}
+
+function press(k){
+  var ops=['+','−','×','÷'];
+  if(k==='C'){
+    expr='';hist.textContent='';sv('nm_last','');
+  }else if(k==='⌫'){
+    expr=expr.slice(0,-1);
+  }else if(k==='='){
+    if(!expr)return;
+    var cleanCode=expr.replace(/\s+/g,'');
+    if(cleanCode==='5656+4646'){
+      hist.textContent='🔓 Secret Search Unlocked';
+      expr='';
+      show();
+      unlockSecretSearch();
+      return;
+    }
+    var cleanedDisplay=expr.replace(/[+−×÷.(]+$/,'');
+    var e=sanitizeExpr(expr);
+    if(!e){return;}
+    try{
+      if(!/^[0-9+\-*/().\s]+$/.test(e))throw 0;
+      var r=Function('"use strict";return ('+e+')')();
+      if(!isFinite(r))throw 0;
+      var ex=cleanedDisplay||expr;
+      hist.textContent=ex+' =';
+      expr=String(+r.toFixed(10));
+      H.unshift({e:ex,r:expr});
+      H=H.slice(0,50);
+      sv('nm_hist',H);
+      sv('nm_last',hist.textContent);
+      renderH();
+    }catch(x){
+      hist.textContent='Check expression';
+    }
+  }else{
+    var lastChar=expr.slice(-1);
+    if(ops.indexOf(k)!==-1 && ops.indexOf(lastChar)!==-1){
+      expr=expr.slice(0,-1)+k;
+    }else{
+      expr+=k;
+    }
+    if(expr.replace(/\s+/g,'')==='5656+4646'){
+      hist.textContent='🔓 Secret Search Unlocked (Press = or scroll down)';
+      unlockSecretSearch();
+    }
+  }
+  show();
+}
+
+document.addEventListener('keydown',function(e){
+  if(!document.getElementById('calc').classList.contains('on')||e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA')return;
+  var m={'*':'×','/':'÷','-':'−'};
+  if(/^[0-9.+()]$/.test(e.key))press(e.key);
+  else if(m[e.key]){e.preventDefault();press(m[e.key])}
+  else if(e.key==='Enter'||e.key==='='){e.preventDefault();press('=')}
+  else if(e.key==='Backspace')press('⌫');
+  else if(e.key==='Escape')press('C');
+});
+
+// More Tools Interactive Workspace
+var swTimer=null,swStart=0,swElapsed=0;
+function openTool(id){
+  if(swTimer){clearInterval(swTimer);swTimer=null;}
+  var v=document.getElementById('toolview');
+  document.querySelectorAll('#toolgrid .tool').forEach(function(c){c.classList.toggle('active-tool',c.dataset.tool===id)});
+  if(id==='unit'){
+    v.innerHTML='<h3>📏 Unit converter</h3><div class="row"><input type="number" id="uval" value="1" style="max-width:160px"><select id="utype" style="max-width:240px"><option value="km_mi">Kilometers → Miles</option><option value="mi_km">Miles → Kilometers</option><option value="kg_lb">Kilograms → Pounds</option><option value="lb_kg">Pounds → Kilograms</option><option value="c_f">Celsius → Fahrenheit</option><option value="f_c">Fahrenheit → Celsius</option></select></div><div class="result-pill" id="ures">1 km = 0.6214 miles</div>';
+    var calcU=function(){
+      var val=parseFloat(document.getElementById('uval').value)||0,t=document.getElementById('utype').value,res='';
+      if(t==='km_mi')res=val+' km = '+(val*0.621371).toFixed(4)+' miles';
+      else if(t==='mi_km')res=val+' miles = '+(val/0.621371).toFixed(4)+' km';
+      else if(t==='kg_lb')res=val+' kg = '+(val*2.20462).toFixed(4)+' lbs';
+      else if(t==='lb_kg')res=val+' lbs = '+(val/2.20462).toFixed(4)+' kg';
+      else if(t==='c_f')res=val+' °C = '+((val*9/5)+32).toFixed(2)+' °F';
+      else if(t==='f_c')res=val+' °F = '+((val-32)*5/9).toFixed(2)+' °C';
+      document.getElementById('ures').textContent=res;
+    };
+    document.getElementById('uval').oninput=calcU;
+    document.getElementById('utype').onchange=calcU;
+  }else if(id==='age'){
+    v.innerHTML='<h3>🎂 Age calculator</h3><div class="row"><div style="flex:1"><label for="adob">Date of birth</label><input type="date" id="adob" value="2000-01-01"></div></div><div class="result-pill" id="ares">Select your birth date above.</div>';
+    var calcA=function(){
+      var d=new Date(document.getElementById('adob').value),now=new Date();
+      if(isNaN(d.getTime())||d>now){document.getElementById('ares').textContent='Please pick a valid past date.';return;}
+      var y=now.getFullYear()-d.getFullYear(),m=now.getMonth()-d.getMonth(),da=now.getDate()-d.getDate();
+      if(da<0){m--;da+=new Date(now.getFullYear(),now.getMonth(),0).getDate();}
+      if(m<0){y--;m+=12;}
+      document.getElementById('ares').textContent='Exact Age: '+y+' years, '+m+' months, '+da+' days';
+    };
+    document.getElementById('adob').onchange=calcA;calcA();
+  }else if(id==='pass'){
+    v.innerHTML='<h3>🔐 Random string &amp; password generator</h3><div class="row"><div style="flex:1"><label for="plen">Length (8–32)</label><input type="number" id="plen" min="8" max="32" value="16"></div><button class="btn" id="pgen" type="button" style="margin-top:18px">Generate</button></div><div class="result-pill" id="pres"></div>';
+    var genP=function(){
+      var len=Math.min(32,Math.max(8,parseInt(document.getElementById('plen').value)||16));
+      var chars='ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789!@#$%^&*';
+      var out='';for(var i=0;i<len;i++)out+=chars.charAt(Math.floor(Math.random()*chars.length));
+      document.getElementById('pres').textContent=out;
+    };
+    document.getElementById('pgen').onclick=genP;genP();
+  }else if(id==='color'){
+    v.innerHTML='<h3>🎨 Color picker</h3><div class="row"><input type="color" id="cpick" value="#2d6bff"><div class="result-pill" id="cres" style="margin-top:0;flex:1">HEX: #2d6bff | RGB: rgb(45, 107, 255)</div></div>';
+    document.getElementById('cpick').oninput=function(e){
+      var h=e.target.value,r=parseInt(h.slice(1,3),16),g=parseInt(h.slice(3,5),16),b=parseInt(h.slice(5,7),16);
+      document.getElementById('cres').textContent='HEX: '+h+' | RGB: rgb('+r+', '+g+', '+b+')';
+    };
+  }else if(id==='word'){
+    v.innerHTML='<h3>🔤 Word counter</h3><textarea id="wtxt" rows="4" placeholder="Type or paste text here..."></textarea><div class="result-pill" id="wres">0 words • 0 characters • ~0 min read</div>';
+    document.getElementById('wtxt').oninput=function(e){
+      var t=e.target.value,w=t.trim()?t.trim().split(/\s+/).length:0,c=t.length,min=Math.ceil(w/200);
+      document.getElementById('wres').textContent=w+' words • '+c+' characters • ~'+min+' min read';
+    };
+  }else if(id==='tip'){
+    v.innerHTML='<h3>💸 Tip &amp; bill splitter</h3><div class="row"><div style="flex:1"><label for="tbill">Bill amount</label><input type="number" id="tbill" value="120"></div><div style="flex:1"><label for="ttip">Tip %</label><input type="number" id="ttip" value="10"></div><div style="flex:1"><label for="tppl">People</label><input type="number" id="tppl" value="3" min="1"></div></div><div class="result-pill" id="tres"></div>';
+    var calcT=function(){
+      var b=parseFloat(document.getElementById('tbill').value)||0,t=parseFloat(document.getElementById('ttip').value)||0,p=Math.max(1,parseInt(document.getElementById('tppl').value)||1);
+      var tip=b*(t/100),tot=b+tip;
+      document.getElementById('tres').textContent='Total: '+tot.toFixed(2)+' (Tip: '+tip.toFixed(2)+') • Per person: '+(tot/p).toFixed(2);
+    };
+    ['tbill','ttip','tppl'].forEach(function(k){document.getElementById(k).oninput=calcT});calcT();
+  }else if(id==='timer'){
+    swElapsed=0;
+    v.innerHTML='<h3>⏱️ Stopwatch</h3><div class="result-pill" id="swdisp" style="font-size:26px;text-align:center">00:00.0</div><div class="row" style="margin-top:12px;justify-content:center"><button class="btn" id="swgo" type="button">Start</button><button class="chip" id="swrst" type="button">Reset</button></div>';
+    var fmt=function(ms){var s=Math.floor(ms/1000),m=Math.floor(s/60),rem=s%60,d=Math.floor((ms%1000)/100);return String(m).padStart(2,'0')+':'+String(rem).padStart(2,'0')+'.'+d;};
+    document.getElementById('swgo').onclick=function(e){
+      if(swTimer){clearInterval(swTimer);swTimer=null;e.target.textContent='Resume';}
+      else{swStart=Date.now()-swElapsed;swTimer=setInterval(function(){swElapsed=Date.now()-swStart;var el=document.getElementById('swdisp');if(el)el.textContent=fmt(swElapsed);},100);e.target.textContent='Pause';}
+    };
+    document.getElementById('swrst').onclick=function(){if(swTimer){clearInterval(swTimer);swTimer=null;}swElapsed=0;document.getElementById('swdisp').textContent='00:00.0';document.getElementById('swgo').textContent='Start';};
+  }else if(id==='notes'){
+    var saved=ld('nm_notes')||'';
+    v.innerHTML='<h3>📝 Quick notes (saved in browser)</h3><textarea id="ntxt" rows="4" placeholder="Write quick notes here..."></textarea><p class="hint" id="nsave">Saved automatically on this device.</p>';
+    var n=document.getElementById('ntxt');n.value=saved;
+    n.oninput=function(){sv('nm_notes',n.value);document.getElementById('nsave').textContent='Saved just now ✓';};
+  }
+}
+document.querySelectorAll('#toolgrid .tool').forEach(function(card){
+  card.onclick=function(){openTool(card.dataset.tool)};
+});
+window.addEventListener('load',function(){openTool('unit')});
+</script>
+</body>
+</html>
