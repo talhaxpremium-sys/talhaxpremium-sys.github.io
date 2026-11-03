@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Noon Mate — Everyday Utility Toolkit</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+:root{
+  --bg:#fcfaf2;
+  --bg-grad:radial-gradient(circle at 15% 15%, rgba(254,238,0,.28), transparent 42%),radial-gradient(circle at 85% 20%, rgba(45,107,255,.14), transparent 40%),radial-gradient(circle at 50% 90%, rgba(255,61,129,.14), transparent 45%);
+  --ink:#141413;
+  --card:rgba(255,255,255,.86);
+  --card-solid:#ffffff;
+  --line:rgba(20,20,19,.1);
+  --y:#feee00;
+  --y-dark:#f5c400;
+  --p:#ff3d81;
+  --b:#2d6bff;
+  --g:#10c98f;
+  --muted:#5f5e54;
+  --shadow:0 14px 34px rgba(20,20,19,.07);
+  --shadow-sm:0 4px 12px rgba(20,20,19,.05);
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#0f0f0c;
+    --bg-grad:radial-gradient(circle at 15% 15%, rgba(254,238,0,.12), transparent 42%),radial-gradient(circle at 85% 20%, rgba(45,107,255,.14), transparent 40%),radial-gradient(circle at 50% 90%, rgba(255,61,129,.12), transparent 45%);
+    --ink:#fdf8d8;
+    --card:rgba(30,29,22,.84);
+    --card-solid:#1e1d16;
+    --line:rgba(255,249,196,.12);
+    --muted:#b5b18c;
+    --shadow:0 16px 40px rgba(0,0,0,.45);
+    --shadow-sm:0 4px 14px rgba(0,0,0,.3);
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#0f0f0c;
+  --bg-grad:radial-gradient(circle at 15% 15%, rgba(254,238,0,.12), transparent 42%),radial-gradient(circle at 85% 20%, rgba(45,107,255,.14), transparent 40%),radial-gradient(circle at 50% 90%, rgba(255,61,129,.12), transparent 45%);
+  --ink:#fdf8d8;
+  --card:rgba(30,29,22,.84);
+  --card-solid:#1e1d16;
+  --line:rgba(255,249,196,.12);
+  --muted:#b5b18c;
+  --shadow:0 16px 40px rgba(0,0,0,.45);
+  --shadow-sm:0 4px 14px rgba(0,0,0,.3);
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background-color:var(--bg);
+  background-image:var(--bg-grad);
+  background-attachment:fixed;
+  color:var(--ink);
+  font-family:"Inter","Plus Jakarta Sans","Segoe UI",system-ui,-apple-system,sans-serif;
+  min-height:100vh;
+  overflow-x:hidden;
+}
+.blob{position:fixed;border-radius:50%;filter:blur(80px);opacity:.4;z-index:0;pointer-events:none;animation:fl 16s ease-in-out infinite alternate}
+.b1{width:340px;height:340px;background:var(--y);top:-90px;left:-70px}
+.b2{width:300px;height:300px;background:var(--p);bottom:-70px;right:-60px;animation-delay:-5s}
+.b3{width:260px;height:260px;background:var(--b);top:42%;left:55%;animation-delay:-9s;opacity:.25}
+@keyframes fl{to{transform:translate(50px,-40px) scale(1.15)}}
+
+.wrap{position:relative;z-index:1;max-width:980px;margin:0 auto;padding:20px 16px 48px}
+
+header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  background:var(--card);
+  backdrop-filter:blur(16px);
+  border:1px solid var(--line);
+  padding:12px 18px;
+  border-radius:22px;
+  box-shadow:var(--shadow-sm);
+}
+.brand{display:flex;align-items:center;gap:12px;font-weight:900;font-size:22px;letter-spacing:-.4px}
+.badge-unofficial{
+  font-size:11px;
+  font-weight:700;
+  padding:3px 9px;
+  border-radius:999px;
+  background:rgba(254,238,0,.22);
+  border:1px solid var(--line);
+  color:var(--muted);
+  margin-top:2px;
+  display:inline-block;
+}
+.logo{animation:bob 3.2s ease-in-out infinite;flex-shrink:0}
+@keyframes bob{50%{transform:translateY(-3px) rotate(-2deg)}}
+
+#theme{
+  border:1px solid var(--line);
+  background:var(--card-solid);
+  color:var(--ink);
+  border-radius:999px;
+  padding:9px 15px;
+  cursor:pointer;
+  font-size:15px;
+  font-weight:700;
+  box-shadow:var(--shadow-sm);
+  transition:transform .15s,border-color .15s;
+}
+#theme:hover{transform:scale(1.05);border-color:var(--b)}
+
+.hero{text-align:center;padding:34px 10px 22px}
+.hero h1{
+  font-size:clamp(34px,7.5vw,60px);
+  margin:0;
+  line-height:1.06;
+  letter-spacing:-1.4px;
+  font-weight:900;
+  background:linear-gradient(90deg,var(--p),#ff9f1c,var(--b),var(--g),var(--p));
+  background-size:300% 100%;
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+  animation:flow 7s linear infinite;
+}
+@keyframes flow{to{background-position:300% 0}}
+.hero p{color:var(--muted);margin:10px auto 0;max-width:520px;font-size:15.5px;line-height:1.5}
+
+nav{
+  display:flex;
+  gap:10px;
+  justify-content:center;
+  flex-wrap:wrap;
+  margin:18px auto 22px;
+  background:var(--card);
+  padding:7px;
+  border-radius:20px;
+  border:1px solid var(--line);
+  width:fit-content;
+  box-shadow:var(--shadow-sm);
+}
+nav button{
+  border:1.5px solid transparent;
+  background:transparent;
+  color:var(--muted);
+  font:inherit;
+  font-weight:800;
+  font-size:14.5px;
+  padding:10px 20px;
+  border-radius:14px;
+  cursor:pointer;
+  transition:all .2s ease;
+}
+nav button:hover{color:var(--ink);background:rgba(128,128,128,.08)}
+nav button.on{
+  background:var(--y);
+  color:#141413;
+  border-color:#141413;
+  box-shadow:2px 2px 0 #141413;
+}
+
+.panel{
+  display:none;
+  background:var(--card);
+  backdrop-filter:blur(18px);
+  border:1px solid var(--line);
+  border-radius:28px;
+  padding:26px;
+  box-shadow:var(--shadow);
+}
+.panel.on{display:block;animation:pop .38s cubic-bezier(.2,1.2,.4,1)}
+@keyframes pop{from{transform:translateY(8px) scale(.98);opacity:0}}
+
+h2{margin:0 0 16px;font-size:23px;letter-spacing:-.4px;display:flex;align-items:center;gap:8px}
+input,select,textarea{
+  font:inherit;
+  color:var(--ink);
+  background:var(--card-solid);
+  border:1.5px solid var(--line);
+  border-radius:14px;
+  padding:12px 14px;
+  width:100%;
+  outline:none;
+  transition:border-color .15s,box-shadow .15s;
+}
+input:focus-visible,button:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid var(--b);outline-offset:2px}
+input:focus,select:focus,textarea:focus{border-color:var(--b);box-shadow:0 0 0 3px rgba(45,107,255,.15)}
+
+.btn{
+  border:1.5px solid #141413;
+  font:inherit;
+  font-weight:800;
+  color:#141413;
+  background:linear-gradient(135deg,var(--y),var(--y-dark));
+  padding:12px 22px;
+  border-radius:14px;
+  cursor:pointer;
+  box-shadow:2px 2px 0 #141413;
+  transition:transform .12s,box-shadow .12s;
+}
+.btn:hover{transform:translate(-1px,-1px);box-shadow:3px 3px 0 #141413}
+.btn:active{transform:translate(1px,1px);box-shadow:1px 1px 0 #141413}
+
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.qrgrid{display:grid;grid-template-columns:1.1fr .9fr;gap:24px;align-items:center}
+@media(max-width:720px){.qrgrid{grid-template-columns:1fr}}
+.qrbox{
+  display:grid;
+  place-items:center;
+  min-height:260px;
+  border-radius:24px;
+  background:#ffffff;
+  border:2.5px dashed var(--y-dark);
+  padding:18px;
+  box-shadow:inset 0 2px 10px rgba(0,0,0,.04);
+}
+.qrbox img,.qrbox canvas{max-width:100%;height:auto;border-radius:8px}
+.hint{color:var(--muted);font-size:13px;margin-top:8px}
+label{font-size:13px;font-weight:700;color:var(--muted);display:inline-block;margin-bottom:4px}
+input[type=color]{padding:3px;height:44px;width:64px;cursor:pointer}
+
+/* Upgraded Calculator UI */
+.calc{
+  max-width:360px;
+  margin:0 auto;
+  background:var(--card-solid);
+  border:1.5px solid var(--line);
+  border-radius:26px;
+  padding:18px;
+  box-shadow:var(--shadow-sm);
+}
+.screen{
+  background:linear-gradient(145deg,#191916,#10100e);
+  color:#feee00;
+  border-radius:20px;
+  padding:16px 18px;
+  text-align:right;
+  margin-bottom:14px;
+  min-height:98px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  border:1px solid rgba(255,255,255,.08);
+  box-shadow:inset 0 4px 12px rgba(0,0,0,.45);
+}
+.screen small{
+  display:block;
+  color:#a8a47a;
+  font-size:14px;
+  min-height:20px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.screen output{
+  display:block;
+  font-size:36px;
+  font-weight:900;
+  letter-spacing:-.5px;
+  overflow-x:auto;
+  white-space:nowrap;
+  scrollbar-width:none;
+}
+.screen output::-webkit-scrollbar{display:none}
+
+.keys{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+}
+.keys button{
+  border:1.5px solid var(--line);
+  font:inherit;
+  font-size:20px;
+  font-weight:800;
+  padding:16px 0;
+  border-radius:16px;
+  cursor:pointer;
+  background:var(--card);
+  color:var(--ink);
+  box-shadow:0 3px 0 var(--line);
+  transition:transform .1s,box-shadow .1s,background .15s;
+  user-select:none;
+}
+.keys button:hover{border-color:var(--b)}
+.keys button:active{transform:translateY(2px);box-shadow:0 1px 0 var(--line)}
+.keys .op{
+  background:linear-gradient(135deg,#2d6bff,#6246ea);
+  color:#fff;
+  border-color:transparent;
+  box-shadow:0 3px 0 rgba(30,60,180,.4);
+}
+.keys .fn{
+  background:linear-gradient(135deg,#ff3d81,#ff7555);
+  color:#fff;
+  border-color:transparent;
+  box-shadow:0 3px 0 rgba(180,30,80,.4);
+}
+.keys .eq{
+  background:linear-gradient(135deg,#10c98f,#06a77d);
+  color:#fff;
+  border-color:transparent;
+  box-shadow:0 3px 0 rgba(6,110,80,.45);
+  font-size:22px;
+}
+
+.hbox{margin-top:18px;border-top:1px solid var(--line);padding-top:14px}
+.hbox ul{list-style:none;margin:10px 0 0;padding:0;max-height:190px;overflow-y:auto}
+.hbox li{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  padding:9px 13px;
+  margin-bottom:6px;
+  border-radius:12px;
+  background:var(--card);
+  border:1px solid var(--line);
+  cursor:pointer;
+  font-size:14px;
+  transition:border-color .15s,transform .12s;
+}
+.hbox li b{color:var(--g);font-weight:800}
+.hbox li:hover{border-color:var(--y-dark);transform:translateX(2px)}
+
+.tools{display:grid;grid-template-columns:repeat(auto-fill,minmax(175px,1fr));gap:12px}
+.tool{
+  position:relative;
+  background:var(--card-solid);
+  border:1.5px solid var(--line);
+  border-radius:20px;
+  padding:16px 15px 15px;
+  display:flex;
+  flex-direction:column;
+  gap:5px;
+  cursor:pointer;
+  text-align:left;
+  transition:transform .16s,border-color .16s,box-shadow .16s;
+  box-shadow:var(--shadow-sm);
+}
+.tool:hover{transform:translateY(-3px);border-color:var(--b)}
+.tool.active-tool{border:2px solid var(--b);box-shadow:0 6px 18px rgba(45,107,255,.16)}
+.tool .ti{font-size:30px;display:inline-block;animation:bob 3s ease-in-out infinite}
+.tool:nth-child(2n) .ti{animation-delay:-1s}.tool:nth-child(3n) .ti{animation-delay:-2s}
+.tool h3{margin:6px 0 0;font-size:16px}
+.tool p{margin:0 0 8px;color:var(--muted);font-size:13px;line-height:1.38}
+.soon{
+  align-self:flex-start;
+  margin-top:auto;
+  background:linear-gradient(135deg,var(--g),var(--b));
+  color:#fff;
+  font-size:11.5px;
+  font-weight:800;
+  padding:4px 11px;
+  border-radius:999px;
+}
+.tool-workspace{
+  margin-top:20px;
+  background:var(--card-solid);
+  border:1.5px solid var(--line);
+  border-radius:22px;
+  padding:20px;
+  box-shadow:var(--shadow-sm);
+}
+.result-pill{
+  margin-top:12px;
+  padding:13px 15px;
+  border-radius:14px;
+  background:rgba(16,201,143,.12);
+  border:1.5px solid var(--g);
+  font-weight:800;
+  word-break:break-all;
+}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+.chip{
+  border:1px solid var(--line);
+  background:var(--card-solid);
+  color:var(--ink);
+  padding:7px 14px;
+  border-radius:999px;
+  cursor:pointer;
+  font:inherit;
+  font-size:13.5px;
+  font-weight:700;
+  transition:background .15s,transform .12s;
+}
+.chip:hover{background:var(--y);color:#141413;transform:translateY(-1px)}
+
+/* Secret Embedded Google Search Section at the bottom */
+#secret-search{
+  display:none;
+  margin-top:28px;
+  background:var(--card);
+  backdrop-filter:blur(18px);
+  border:2px solid var(--b);
+  border-radius:28px;
+  padding:22px;
+  box-shadow:var(--shadow);
+  animation:pop .4s cubic-bezier(.2,1.2,.4,1);
+}
+#secret-search.on{display:block}
+.secret-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-bottom:12px;
+}
+.frame{
+  width:100%;
+  height:68vh;
+  min-height:420px;
+  border:2px solid var(--line);
+  border-radius:18px;
+  background:#fff;
+  display:block;
+  margin-top:12px;
+}
+
+footer{text-align:center;color:var(--muted);font-size:13px;margin-top:28px;padding-top:18px;border-top:1px solid var(--line);line-height:1.5}
+footer a{color:var(--ink);font-weight:700}
+.disclaimer-box{max-width:740px;margin:10px auto 0;font-size:12px;color:var(--muted);background:var(--card);border:1px solid var(--line);border-radius:14px;padding:10px 14px}
+
+#devbtn{
+  position:fixed;
+  right:16px;
+  bottom:calc(16px + env(safe-area-inset-bottom,0px));
+  z-index:5;
+  width:34px;
+  height:34px;
+  border-radius:50%;
+  border:1.5px solid #141413;
+  background:var(--y);
+  color:#141413;
+  font-size:17px;
+  font-weight:800;
+  line-height:1;
+  padding:0;
+  cursor:pointer;
+  box-shadow:var(--shadow-sm);
+  transition:transform .15s;
+}
+#devbtn:hover{transform:rotate(-8deg) scale(1.1)}
+.ov{position:fixed;inset:0;z-index:20;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.55);backdrop-filter:blur(4px);padding:20px}
+.ov.on{display:flex}
+.dev{width:100%;max-width:360px;background:var(--bg);color:var(--ink);border:2px solid var(--ink);border-radius:26px;padding:26px 22px;text-align:center;animation:pop .35s cubic-bezier(.2,1.3,.4,1)}
+.dev img,.av{width:112px;height:112px;border-radius:50%;object-fit:cover;border:4px solid var(--y);margin:0 auto 12px;display:block}
+.av{display:none;background:var(--y);color:#161616;font-size:46px;font-weight:900;line-height:104px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
+<div class="wrap">
+<header>
+  <div class="brand">
+    <svg class="logo" width="52" height="52" viewBox="0 0 54 54" aria-label="Noon Mate logo"><rect width="54" height="54" rx="15" fill="#feee00" stroke="#161616" stroke-width="2.5"/><text x="27" y="30" text-anchor="middle" font-family="Trebuchet MS,Arial,sans-serif" font-weight="900" font-size="17" fill="#161616">noon</text><path d="M15 38q12 9 24 0" stroke="#161616" stroke-width="3" fill="none" stroke-linecap="round"/><circle cx="43" cy="12" r="3.5" fill="#ff3d81"/></svg>
+    <div>
+      <span>noon mate</span>
+      <div><span class="badge-unofficial">Unofficial Utility Toolkit</span></div>
+    </div>
+  </div>
+  <button id="theme" aria-label="Toggle theme">🌓</button>
+</header>
+
+<section class="hero">
+  <h1>Your everyday toolkit</h1>
+  <p>Make QR codes, do quick math, and use everyday helper utilities — all in your browser.</p>
+</section>
+
+<nav id="tabs">
+  <button class="on" data-t="qr">QR Code</button>
+  <button data-t="calc">Calculator</button>
+  <button data-t="more">More Tools</button>
+</nav>
+
+<section class="panel on" id="qr">
+  <h2>✨ QR code generator</h2>
+  <div class="qrgrid">
+    <div>
+      <label for="qtext">Text or link</label>
+      <input id="qtext" placeholder="https://..." value="https://talhaxpremium-sys.github.io/">
+      <div class="row" style="margin-top:12px">
+        <div><label for="qfg">QR color</label><br><input type="color" id="qfg" value="#161616"></div>
+        <div><label for="qbg">Background</label><br><input type="color" id="qbg" value="#ffffff"></div>
+        <div style="flex:1;min-width:110px"><label for="qsz">Size</label>
+          <select id="qsz"><option value="180">Small</option><option value="240" selected>Medium</option><option value="300">Large</option></select></div>
+      </div>
+      <div class="row" style="margin-top:16px"><button class="btn" id="qgo" type="button">Generate QR</button></div>
+      <p class="hint">To save the QR code, long-press it (phone) or right-click it (computer).</p>
+    </div>
+    <div class="qrbox" id="qrbox"></div>
+  </div>
+</section>
+
+<section class="panel" id="calc">
+  <h2>🧮 Smart Calculator</h2>
+  <div class="calc">
+    <div class="screen">
+      <small id="hist"></small>
+      <output id="out">0</output>
+    </div>
+    <div class="keys" id="keys"></div>
+    <div class="hbox">
+      <div class="row" style="justify-content:space-between">
+        <strong>History</strong>
+        <button class="chip" id="hclr" type="button">Clear history</button>
+      </div>
+      <ul id="hlist"></ul>
+    </div>
+  </div>
+</section>
+
+<section class="panel" id="more">
+  <h2>🧰 More tools</h2>
+  <p class="hint" style="margin:0 0 14px">Tap any utility below to open and use it right inside your browser.</p>
+  <div class="tools" id="toolgrid">
+    <div class="tool active-tool" data-tool="unit"><span class="ti">📏</span><h3>Unit converter</h3><p>Length, weight and temperature in one tap.</p><span class="soon">Open tool</span></div>
+    <div class="tool" data-tool="age"><span class="ti">🎂</span><h3>Age calculator</h3><p>Find your exact age in years, months and days.</p><span class="soon">Open tool</span></div>
+    <div class="tool" data-tool="pass"><span class="ti">🔐</span><h3>Password generator</h3><p>Create strong, random strings locally.</p><span class="soon">Open tool</span></div>
+    <div class="tool" data-tool="color"><span class="ti">🎨</span><h3>Color picker</h3><p>Pick colors and copy HEX or RGB codes.</p><span class="soon">Open tool</span></div>
+    <div class="tool" data-tool="word"><span class="ti">🔤</span><h3>Word counter</h3><p>Count words, characters and reading time.</p><span class="soon">Open tool</span></div>
+    <div class="tool" data-tool="tip"><span class="ti">💸</span><h3>Tip splitter</h3><p>Split a bill between friends with tip included.</p><span class="soon">Open tool</span></div>
+    <div class="tool" data-tool="timer"><span class="ti">⏱️</span><h3>Stopwatch</h3><p>Simple browser stopwatch with lap tracking.</p><span class="soon">Open tool</span></div>
+    <div class="tool" data-tool="notes"><span class="ti">📝</span><h3>Quick notes</h3><p>Jot down notes that stay on your device.</p><span class="soon">Open tool</span></div>
+  </div>
+  <div class="tool-workspace" id="toolview"></div>
+</section>
+
+<!-- Hidden Embedded Google Search Section (Unlocked via 5656+4646 in Calculator) -->
+<section id="secret-search" aria-label="Embedded Google Search">
+  <div class="secret-head">
+    <h2 style="margin:0">🔍 Embedded Google Search</h2>
+    <button class="chip" id="sclose" type="button">Hide Search ✕</button>
+  </div>
+  <form id="sform" class="row" style="margin-bottom:10px">
+    <input id="sq" placeholder="Search Google right inside this page..." style="flex:1;min-width:200px">
+    <button class="btn" id="sbtn" type="submit">Search</button>
+  </form>
+  <div class="chips">
+    <button class="chip sq-chip" type="button" data-q="Noon">Noon</button>
+    <button class="chip sq-chip" type="button" data-q="Riyadh weather">Riyadh weather</button>
+    <button class="chip sq-chip" type="button" data-q="SAR to BDT">SAR to BDT</button>
+    <button class="chip sq-chip" type="button" data-q="Translate English to Bengali">Translator</button>
+  </div>
+  <iframe id="gframe" class="frame" title="Embedded Google Search" sandbox="allow-scripts allow-same-origin allow-forms" referrerpolicy="no-referrer"></iframe>
+</section>
+
+<footer>
+  <div>Made by <strong>Talha</strong> (<a href="https://github.com/talhaxpremium-sys" target="_blank" rel="noopener noreferrer">@talhaxpremium-sys</a>) • Open-Source Personal Web Development Project</div>
+  <div class="disclaimer-box">
+    <strong>Disclaimer:</strong> Noon Mate is an independent, non-commercial browser utility toolkit created for everyday productivity. It is <strong>not</strong> an official Noon login portal or corporate system, and it does not request, store, or collect any employee passwords, credentials, or personal data.
+  </div>
+</footer>
+
+<button id="devbtn" type="button" aria-label="Developer details">ⓘ</button>
+<div class="ov" id="ov"><div class="dev" role="dialog" aria-label="Developer details">
+  <img id="dimg" src="https://i.ibb.co/1J9kypVg/20260607-202744-3.jpg" alt="Developer photo" referrerpolicy="no-referrer">
+  <div class="av" id="dav">T</div>
+  <h3 style="margin:0">Talha (@talhaxpremium-sys)</h3>
+  <p class="hint">Independent Developer of Noon Mate</p>
+  <p style="margin:8px 0 12px">Building simple, fast, non-commercial browser utilities with HTML, CSS &amp; JavaScript.</p>
+  <p style="margin:0 0 16px;font-size:13px"><a href="https://github.com/talhaxpremium-sys/talhaxpremium-sys.github.io" target="_blank" rel="noopener noreferrer" style="color:var(--b);font-weight:800">View Source on GitHub ↗</a></p>
+  <button class="btn" id="dclose" type="button">Close</button>
+</div></div>
+</div>
+
+<script>
+// developer card
+var ov=document.getElementById('ov'),dimg=document.getElementById('dimg');
+dimg.onerror=function(){dimg.style.display='none';document.getElementById('dav').style.display='block'};
+document.getElementById('devbtn').onclick=function(){ov.classList.add('on')};
+document.getElementById('dclose').onclick=function(){ov.classList.remove('on')};
+ov.onclick=function(e){if(e.target===ov)ov.classList.remove('on')};
+
+// theme
+var root=document.documentElement;
+document.getElementById('theme').onclick=function(){
+  var dark=root.getAttribute('data-theme')?root.getAttribute('data-theme')==='dark':matchMedia('(prefers-color-scheme:dark)').matches;
+  root.setAttribute('data-theme',dark?'light':'dark');
+};
+
+// tabs
+var tabs=document.querySelectorAll('#tabs button');
+tabs.forEach(function(b){b.onclick=function(){
+  tabs.forEach(function(x){x.classList.toggle('on',x===b)});
+  document.querySelectorAll('.panel').forEach(function(p){p.classList.toggle('on',p.id===b.dataset.t)});
+}});
+
+// QR
+function makeQR(){
+  var box=document.getElementById('qrbox');box.innerHTML='';
+  var t=document.getElementById('qtext').value.trim();
+  if(!t){box.textContent='Type something, then press Generate.';box.style.color='#555';return}
+  var s=+document.getElementById('qsz').value;
+  try{new QRCode(box,{text:t,width:s,height:s,colorDark:document.getElementById('qfg').value,colorLight:document.getElementById('qbg').value,correctLevel:QRCode.CorrectLevel.H});}
+  catch(e){box.textContent='Text is too long. Shorten it and try again.'}
+}
+document.getElementById('qgo').onclick=makeQR;
+['qfg','qbg','qsz'].forEach(function(i){document.getElementById(i).onchange=makeQR});
+document.getElementById('qtext').addEventListener('keydown',function(e){if(e.key==='Enter')makeQR()});
+window.addEventListener('load',makeQR);
+
+// Secret Embedded Google Search Logic
+var secretBox=document.getElementById('secret-search');
+var gframe=document.getElementById('gframe');
+var sqInput=document.getElementById('sq');
+
+function unlockSecretSearch(initialQuery){
+  secretBox.classList.add('on');
+  var targetUrl='https://www.google.com/webhp?igu=1';
+  if(initialQuery){
+    targetUrl='https://www.google.com/search?igu=1&q='+encodeURIComponent(initialQuery);
+  }
+  if(!gframe.getAttribute('src')||initialQuery){
+    gframe.setAttribute('src',targetUrl);
+  }
+  setTimeout(function(){
+    secretBox.scrollIntoView({behavior:'smooth',block:'start'});
+  },120);
+}
+
+document.getElementById('sform').onsubmit=function(e){
+  e.preventDefault();
+  var q=sqInput.value.trim();
+  gframe.setAttribute('src',q?'https://www.google.com/search?igu=1&q='+encodeURIComponent(q):'https://www.google.com/webhp?igu=1');
+};
+document.querySelectorAll('.sq-chip').forEach(function(btn){
+  btn.onclick=function(){
+    var q=btn.dataset.q;
+    sqInput.value=q;
+    gframe.setAttribute('src','https://www.google.com/search?igu=1&q='+encodeURIComponent(q));
+  };
+});
+document.getElementById('sclose').onclick=function(){
+  secretBox.classList.remove('on');
+};
+
+// Calculator (4x5 clean grid, trailing-operator tolerant, secret code 5656+4646)
+var expr='',out=document.getElementById('out'),hist=document.getElementById('hist'),H=[];
+function ld(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}}
+function sv(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+H=ld('nm_hist')||[];expr=ld('nm_expr')||'';
+
+function renderH(){
+  var ul=document.getElementById('hlist');ul.innerHTML='';
+  if(!H.length){var li=document.createElement('li');li.textContent='No calculations yet.';li.style.cursor='default';ul.appendChild(li);return}
+  H.forEach(function(h){
+    var li=document.createElement('li');
+    var a=document.createElement('span');a.textContent=h.e;
+    var b=document.createElement('b');b.textContent='= '+h.r;
+    li.appendChild(a);li.appendChild(b);
+    li.onclick=function(){expr=h.r;show()};
+    ul.appendChild(li);
+  });
+}
+document.getElementById('hclr').onclick=function(){H=[];sv('nm_hist',H);renderH()};
+window.addEventListener('load',function(){show();renderH();hist.textContent=ld('nm_last')||''});
+
+// Clean 4x5 layout: '=' sits neatly in the 4th column of Row 5 (aligned with ÷, ×, −, +)
+var layout=[
+  ['C','fn'],['(','op'],[')','op'],['÷','op'],
+  ['7'],['8'],['9'],['×','op'],
+  ['4'],['5'],['6'],['−','op'],
+  ['1'],['2'],['3'],['+','op'],
+  ['0'],['.'],['⌫','fn'],['=','eq']
+];
+var kb=document.getElementById('keys');
+layout.forEach(function(k){
+  var b=document.createElement('button');
+  b.type='button';
+  b.textContent=k[0];
+  if(k[1])b.className=k[1];
+  b.onclick=function(){press(k[0])};
+  kb.appendChild(b);
+});
+
+function sanitizeExpr(raw){
+  var s=raw.replace(/×/g,'*').replace(/÷/g,'/').replace(/−/g,'-');
+  // Strip any trailing operators or incomplete decimal/open-paren at the end
+  s=s.replace(/[+\-*/.(]+$/,'');
+  // Balance any unclosed parentheses
+  var openCount=(s.match(/\(/g)||[]).length;
+  var closeCount=(s.match(/\)/g)||[]).length;
+  while(openCount>closeCount){s+=')';closeCount++;}
+  return s;
+}
+
+function show(){
+  out.textContent=expr||'0';
+  sv('nm_expr',expr);
+}
+
+function press(k){
+  var ops=['+','−','×','÷'];
+  if(k==='C'){
+    expr='';hist.textContent='';sv('nm_last','');
+  }else if(k==='⌫'){
+    expr=expr.slice(0,-1);
+  }else if(k==='='){
+    if(!expr)return;
+    var cleanCode=expr.replace(/\s+/g,'');
+    if(cleanCode==='5656+4646'){
+      hist.textContent='🔓 Secret Search Unlocked';
+      expr='';
+      show();
+      unlockSecretSearch();
+      return;
+    }
+    var cleanedDisplay=expr.replace(/[+−×÷.(]+$/,'');
+    var e=sanitizeExpr(expr);
+    if(!e){return;}
+    try{
+      if(!/^[0-9+\-*/().\s]+$/.test(e))throw 0;
+      var r=Function('"use strict";return ('+e+')')();
+      if(!isFinite(r))throw 0;
+      var ex=cleanedDisplay||expr;
+      hist.textContent=ex+' =';
+      expr=String(+r.toFixed(10));
+      H.unshift({e:ex,r:expr});
+      H=H.slice(0,50);
+      sv('nm_hist',H);
+      sv('nm_last',hist.textContent);
+      renderH();
+    }catch(x){
+      hist.textContent='Check expression';
+    }
+  }else{
+    // Prevent duplicate consecutive operators (e.g., 10++ or 10+× replaces the last operator)
+    var lastChar=expr.slice(-1);
+    if(ops.indexOf(k)!==-1 && ops.indexOf(lastChar)!==-1){
+      expr=expr.slice(0,-1)+k;
+    }else{
+      expr+=k;
+    }
+    // Also unlock immediately if user finishes typing 5656+4646
+    if(expr.replace(/\s+/g,'')==='5656+4646'){
+      hist.textContent='🔓 Secret Search Unlocked (Press = or scroll down)';
+      unlockSecretSearch();
+    }
+  }
+  show();
+}
+
+document.addEventListener('keydown',function(e){
+  if(!document.getElementById('calc').classList.contains('on')||e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA')return;
+  var m={'*':'×','/':'÷','-':'−'};
+  if(/^[0-9.+()]$/.test(e.key))press(e.key);
+  else if(m[e.key]){e.preventDefault();press(m[e.key])}
+  else if(e.key==='Enter'||e.key==='='){e.preventDefault();press('=')}
+  else if(e.key==='Backspace')press('⌫');
+  else if(e.key==='Escape')press('C');
+});
+
+// More Tools Interactive Workspace
+var swTimer=null,swStart=0,swElapsed=0;
+function openTool(id){
+  if(swTimer){clearInterval(swTimer);swTimer=null;}
+  var v=document.getElementById('toolview');
+  document.querySelectorAll('#toolgrid .tool').forEach(function(c){c.classList.toggle('active-tool',c.dataset.tool===id)});
+  if(id==='unit'){
+    v.innerHTML='<h3>📏 Unit converter</h3><div class="row"><input type="number" id="uval" value="1" style="max-width:160px"><select id="utype" style="max-width:240px"><option value="km_mi">Kilometers → Miles</option><option value="mi_km">Miles → Kilometers</option><option value="kg_lb">Kilograms → Pounds</option><option value="lb_kg">Pounds → Kilograms</option><option value="c_f">Celsius → Fahrenheit</option><option value="f_c">Fahrenheit → Celsius</option></select></div><div class="result-pill" id="ures">1 km = 0.6214 miles</div>';
+    var calcU=function(){
+      var val=parseFloat(document.getElementById('uval').value)||0,t=document.getElementById('utype').value,res='';
+      if(t==='km_mi')res=val+' km = '+(val*0.621371).toFixed(4)+' miles';
+      else if(t==='mi_km')res=val+' miles = '+(val/0.621371).toFixed(4)+' km';
+      else if(t==='kg_lb')res=val+' kg = '+(val*2.20462).toFixed(4)+' lbs';
+      else if(t==='lb_kg')res=val+' lbs = '+(val/2.20462).toFixed(4)+' kg';
+      else if(t==='c_f')res=val+' °C = '+((val*9/5)+32).toFixed(2)+' °F';
+      else if(t==='f_c')res=val+' °F = '+((val-32)*5/9).toFixed(2)+' °C';
+      document.getElementById('ures').textContent=res;
+    };
+    document.getElementById('uval').oninput=calcU;
+    document.getElementById('utype').onchange=calcU;
+  }else if(id==='age'){
+    v.innerHTML='<h3>🎂 Age calculator</h3><div class="row"><div style="flex:1"><label for="adob">Date of birth</label><input type="date" id="adob" value="2000-01-01"></div></div><div class="result-pill" id="ares">Select your birth date above.</div>';
+    var calcA=function(){
+      var d=new Date(document.getElementById('adob').value),now=new Date();
+      if(isNaN(d.getTime())||d>now){document.getElementById('ares').textContent='Please pick a valid past date.';return;}
+      var y=now.getFullYear()-d.getFullYear(),m=now.getMonth()-d.getMonth(),da=now.getDate()-d.getDate();
+      if(da<0){m--;da+=new Date(now.getFullYear(),now.getMonth(),0).getDate();}
+      if(m<0){y--;m+=12;}
+      document.getElementById('ares').textContent='Exact Age: '+y+' years, '+m+' months, '+da+' days';
+    };
+    document.getElementById('adob').onchange=calcA;calcA();
+  }else if(id==='pass'){
+    v.innerHTML='<h3>🔐 Random string &amp; password generator</h3><div class="row"><div style="flex:1"><label for="plen">Length (8–32)</label><input type="number" id="plen" min="8" max="32" value="16"></div><button class="btn" id="pgen" type="button" style="margin-top:18px">Generate</button></div><div class="result-pill" id="pres"></div>';
+    var genP=function(){
+      var len=Math.min(32,Math.max(8,parseInt(document.getElementById('plen').value)||16));
+      var chars='ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789!@#$%^&*';
+      var out='';for(var i=0;i<len;i++)out+=chars.charAt(Math.floor(Math.random()*chars.length));
+      document.getElementById('pres').textContent=out;
+    };
+    document.getElementById('pgen').onclick=genP;genP();
+  }else if(id==='color'){
+    v.innerHTML='<h3>🎨 Color picker</h3><div class="row"><input type="color" id="cpick" value="#2d6bff"><div class="result-pill" id="cres" style="margin-top:0;flex:1">HEX: #2d6bff | RGB: rgb(45, 107, 255)</div></div>';
+    document.getElementById('cpick').oninput=function(e){
+      var h=e.target.value,r=parseInt(h.slice(1,3),16),g=parseInt(h.slice(3,5),16),b=parseInt(h.slice(5,7),16);
+      document.getElementById('cres').textContent='HEX: '+h+' | RGB: rgb('+r+', '+g+', '+b+')';
+    };
+  }else if(id==='word'){
+    v.innerHTML='<h3>🔤 Word counter</h3><textarea id="wtxt" rows="4" placeholder="Type or paste text here..."></textarea><div class="result-pill" id="wres">0 words • 0 characters • ~0 min read</div>';
+    document.getElementById('wtxt').oninput=function(e){
+      var t=e.target.value,w=t.trim()?t.trim().split(/\s+/).length:0,c=t.length,min=Math.ceil(w/200);
+      document.getElementById('wres').textContent=w+' words • '+c+' characters • ~'+min+' min read';
+    };
+  }else if(id==='tip'){
+    v.innerHTML='<h3>💸 Tip &amp; bill splitter</h3><div class="row"><div style="flex:1"><label for="tbill">Bill amount</label><input type="number" id="tbill" value="120"></div><div style="flex:1"><label for="ttip">Tip %</label><input type="number" id="ttip" value="10"></div><div style="flex:1"><label for="tppl">People</label><input type="number" id="tppl" value="3" min="1"></div></div><div class="result-pill" id="tres"></div>';
+    var calcT=function(){
+      var b=parseFloat(document.getElementById('tbill').value)||0,t=parseFloat(document.getElementById('ttip').value)||0,p=Math.max(1,parseInt(document.getElementById('tppl').value)||1);
+      var tip=b*(t/100),tot=b+tip;
+      document.getElementById('tres').textContent='Total: '+tot.toFixed(2)+' (Tip: '+tip.toFixed(2)+') • Per person: '+(tot/p).toFixed(2);
+    };
+    ['tbill','ttip','tppl'].forEach(function(k){document.getElementById(k).oninput=calcT});calcT();
+  }else if(id==='timer'){
+    swElapsed=0;
+    v.innerHTML='<h3>⏱️ Stopwatch</h3><div class="result-pill" id="swdisp" style="font-size:26px;text-align:center">00:00.0</div><div class="row" style="margin-top:12px;justify-content:center"><button class="btn" id="swgo" type="button">Start</button><button class="chip" id="swrst" type="button">Reset</button></div>';
+    var fmt=function(ms){var s=Math.floor(ms/1000),m=Math.floor(s/60),rem=s%60,d=Math.floor((ms%1000)/100);return String(m).padStart(2,'0')+':'+String(rem).padStart(2,'0')+'.'+d;};
+    document.getElementById('swgo').onclick=function(e){
+      if(swTimer){clearInterval(swTimer);swTimer=null;e.target.textContent='Resume';}
+      else{swStart=Date.now()-swElapsed;swTimer=setInterval(function(){swElapsed=Date.now()-swStart;var el=document.getElementById('swdisp');if(el)el.textContent=fmt(swElapsed);},100);e.target.textContent='Pause';}
+    };
+    document.getElementById('swrst').onclick=function(){if(swTimer){clearInterval(swTimer);swTimer=null;}swElapsed=0;document.getElementById('swdisp').textContent='00:00.0';document.getElementById('swgo').textContent='Start';};
+  }else if(id==='notes'){
+    var saved=ld('nm_notes')||'';
+    v.innerHTML='<h3>📝 Quick notes (saved in browser)</h3><textarea id="ntxt" rows="4" placeholder="Write quick notes here..."></textarea><p class="hint" id="nsave">Saved automatically on this device.</p>';
+    var n=document.getElementById('ntxt');n.value=saved;
+    n.oninput=function(){sv('nm_notes',n.value);document.getElementById('nsave').textContent='Saved just now ✓';};
+  }
+}
+document.querySelectorAll('#toolgrid .tool').forEach(function(card){
+  card.onclick=function(){openTool(card.dataset.tool)};
+});
+window.addEventListener('load',function(){openTool('unit')});
+</script>
+</body>
+</html>
